@@ -12,10 +12,15 @@ console.log('ramanCalc.js - 1/27/2020 Adam Wise');
 
 //first, make a manual entry box
 
-var app = { 'centerWavelength' : 500,
-            'gratingTilt' : 0,
-            'deviationAngle' : -14,
-            'grooveDensity' : 1200};
+var app = { 'centerWavelength' : 500, // center wavelength in nm
+            'startWavelength' : 0, // start wavelength of sensor bandwidth in nm
+            'endWavelength' : 0, // end wavelength of sensor bandwidth in nm
+            'gratingTilt' : 0, // grating tilt in degrees
+            'deviationAngle' : -14, // deviation angle of spectrometer in degrees
+            'grooveDensity' : 1200, // groove density of grating in lines / mm
+            'focalLength': 193, // spectrometer focal length in mm
+            'sensorSize' : 25.6, // sensor width in mm
+            'focalPlaneTilt' : 4.56}; // camera focal plane tilt in degrees
 
 var mainSVG = d3.select('body').append('svg').classed('mainSVG', true);
 
@@ -34,9 +39,24 @@ function calculateTilt(obj){
     sinTilt = 10**-6 * obj.centerWavelength * obj.grooveDensity / (-2 * Math.cos( (2 * Math.PI) * obj.deviationAngle / 360  ))
     return 360 * Math.asin(sinTilt) / (2 * Math.PI)
 }
+
+function deg(angleInRadians){
+    return 360 * angleInRadians / ( 2 * Math.PI )
+}
+
+function rad(angleInDegrees){
+    return 2 * Math.PI * angleInDegrees / ( 360 )
+}
 // end of utility functions //
 
-var indicators = ['deviationAngle', 'centerWavelength', 'gratingTilt'].map(function(n){return createNumberDisplay('body',n)});
+var indicators = ['deviationAngle',
+                 'centerWavelength',
+                 'startWavelength',
+                 'endWavelength',
+                 'focalLength',
+                 'sensorSize',
+                 'grooveDensity',
+                  'gratingTilt'].map(function(n){return createNumberDisplay('body',n)});
 
 
 var canvasHeight = 300;
@@ -47,12 +67,9 @@ mainSVG.style('width', canvasWidth + 'px');
 // add a grating to the svg
 var gratingHeight = 10;
 var gratingWidth = 100;
-
 var gratingHolder = mainSVG.append('g');
 gratingHolder.attr('transform',`translate(${canvasWidth/2}, ${canvasHeight/2})`)
-
 var grating = gratingHolder.append('rect')
-
 grating.style('width', `${gratingWidth}px`);
 grating.style('height', `${gratingHeight}px`);
 grating.attr('x', `${-gratingWidth/2}px`);
@@ -64,13 +81,23 @@ function updateDisplay(){
     // redraw the grating tilt
     app['gratingTilt'] = calculateTilt(app)||90;
 
+    // calculate the angle of the incident and diffracted rays relative to the grating normal
+    var thetaInc = app['deviationAngle'] - app['gratingTilt'];
+    var thetaRefr = app['deviationAngle'] + app['gratingTilt'];
+
+    // calculate the difference in angle of the rays hitting the edge of the camera chip relative to the center wavelength
+    var thetaDiff = Math.asin(app['sensorSize']/2 * Math.cos(rad(app['focalPlaneTilt'])) / app['focalLength']);
+    app['startWavelength'] = 10**6 * (1/app['grooveDensity']) * ( Math.sin(rad(thetaInc)) - Math.sin(rad(thetaRefr) - thetaDiff) ) ;
+    app['endWavelength'] = 10**6 * (1/app['grooveDensity']) * ( Math.sin(rad(thetaInc)) - Math.sin(rad(thetaRefr) + thetaDiff) ) ;
+
+
     var translateString = `translate(${canvasWidth/2}, ${canvasHeight/2})`;
     var rotationString = `rotate(${app['gratingTilt']})`;
     gratingHolder.attr('transform', translateString + rotationString);
 
     // update the parameter displays
     indicators.forEach( function(ind){
-        ind.text(app[ind.attr('parameter')])
+        ind.text(ind.attr('parameter') + ' ' + Math.round( app[ind.attr('parameter')] * 100 ) / 100 )
     });
 }
 
@@ -92,10 +119,8 @@ cwlRange.attr('type', 'range')
     })
 
 /**
- cwl_m = (cwl*10**-9) # center wavelength in m
-gd_m = (gd * 10**3) # groove density in lines/m
-sin_tilt = (cwl_m*gd_m / (-2 * np.cos(np.radians(dev))))
-tilt = np.arcsin(sin_tilt) # grating tilt in 
-np.degrees(tilt) 
+ok what now... 
+show center wavelength, start wavelength and end wavelength
+include camera definitions?
  **/
 
