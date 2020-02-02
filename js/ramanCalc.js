@@ -84,14 +84,14 @@ var indicators = ['centerWavelength',
                    'gratingTilt'].map(function(n){return createNumberDisplay('body',n)});
 
 
-var canvasHeight = 200;
-var canvasWidth = 200;
+var canvasHeight = 100;
+var canvasWidth = 100;
 mainSVG.style('height', canvasHeight + 'px');
 mainSVG.style('width', canvasWidth + 'px');
 
 // add a grating to the svg
-var gratingHeight = 10;
-var gratingWidth = 100;
+var gratingHeight = canvasHeight/20;
+var gratingWidth = canvasWidth/2;
 var gratingHolder = mainSVG.append('g');
 gratingHolder.attr('transform',`translate(${canvasWidth/2}, ${canvasHeight/2})`)
 var grating = gratingHolder.append('rect')
@@ -256,10 +256,11 @@ function createOrUpdateTable(){
     var headerLabels = ['Model',
                          'Grating, l/mm',
                          'Grating Angle',
+                         'Dispersion, nm/mm',
                         'Start, nm',
                         'End, nm',
                         'Bandwidth, nm',
-                        'Dispersion, nm/mm',
+
                         'Resolution, nm',
                     ];
 
