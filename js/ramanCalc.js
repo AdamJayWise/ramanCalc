@@ -64,6 +64,7 @@ function r(n,d){
 }
 // end of utility functions //
 
+/** 
 var indicators = ['deviationAngle',
                  'startWavelength',
                  'centerWavelength',
@@ -73,6 +74,10 @@ var indicators = ['deviationAngle',
                  'sensorSize',
                  'grooveDensity',
                   'gratingTilt'].map(function(n){return createNumberDisplay('body',n)});
+*/
+
+var indicators = ['centerWavelength',
+                   'gratingTilt'].map(function(n){return createNumberDisplay('body',n)});
 
 
 var canvasHeight = 200;
@@ -191,6 +196,20 @@ spectrometers = { 'kymera193' : {'psf' : 40,
                                'fl' : 328,
                                'displayName' : 'Kymera 328'
                                }, 
+
+                'shamrock500' : {'psf' : 40,
+                               'dev' : -11.5,
+                              'fpt' : 3.752,
+                              'fl' : 500,
+                              'displayName' : 'Shamrock 500'
+                              }, 
+                
+            'shamrock500' : {'psf' : 40,
+                              'dev' : -7.39,
+                             'fpt' : 1.083,
+                             'fl' : 750,
+                             'displayName' : 'Shamrock 750'
+                             }, 
                 };
 
 
@@ -206,16 +225,14 @@ function createOrUpdateTable(){
     d3.selectAll('table').remove();
     var resultTable = d3.select('body').append('table').attr('id','results');
     var headerRow = resultTable.append('tr');
-    var headerLabels = ['Spectrometer',
-                         'Focal Length',
+    var headerLabels = ['Model',
                          'Grating Rule (l/mm)',
                          'Grating Angle',
-                        'Start Wavelength, nm',
-                        'Center Wavelength, nm',
-                        'End Wavelength, nm',
+                        'Start, nm',
+                        'End, nm',
                         'Bandwidth, nm',
-                        'Nominal Dispersion, nm/mm',
-                        'Spectral Resolution, nm'];
+                        'Dispersion, nm/mm',
+                        'Resolution, nm'];
 
     headerLabels.forEach(function(label){
         headerRow.append('th').text(label);
@@ -236,11 +253,11 @@ function createOrUpdateTable(){
                                              16);
             var newCombo = {
                 'spectrometer' : spectrometers[spec]['displayName'],
-                'focal length' : spectrometers[spec]['fl'],
+                //'focal length' : spectrometers[spec]['fl'],
                 'rule' : gratings[grat]['rule'],
                 'gratingTilt' : gratTilt,
                 'Start Wavelength' : r(wlObj['startWavelength'], 2) || '-',
-                'Center Wavelength' : app['centerWavelength'],
+                //'Center Wavelength' : app['centerWavelength'],
                 'End Wavelength' : r(wlObj['endWavelength'], 2) || '-',
                 'Band Width' : r(wlObj['bandWidth'], 2) || '-',
                 'dispersion' : r(wlObj['linearDispersion'], 2) || '-',
