@@ -30,6 +30,8 @@ var app = { 'centerWavelength' : 500, // center wavelength in nm
             'focalPlaneTilt' : 4.56, // camera focal plane tilt in degrees
             'ascending' : 1,
             'ramanExcWavelength' : 0,
+            'activeGratings' : [],
+            'activeSpect' : [],
     };
 
 var mainSVG = d3.select('body')
@@ -182,6 +184,7 @@ ramanInput.on('input', function(){
 
 
 
+
 /**
 ok what now... 
 show center wavelength, start wavelength and end wavelength
@@ -190,49 +193,63 @@ include camera definitions?
 
 // create a table
 
-gratings = { '53-*-201R' : {'rule' : 150,
+gratings = { '150 l/mm, 500 nm blaze' : {'rule' : 150,
                             'blaze' : 500,
                             'partNumber' : '53-*-201R', 
                             },
-            '53-*-270R' : {'rule' : 300,
+            '300 l/mm, 500 nm blaze' : {'rule' : 300,
                             'blaze' : 500,
                             'partNumber' : '53-*-270R',
                         },
-            '53-*-280R' : {'rule' : 1200,
+            '1200 l/mm, 500 nm blaze' : {'rule' : 1200,
                             'blaze' : 500,
                             'partNumber' : '53-*-270R',
                         }, 
-            '53-*-330H' : {'rule' : 1800,
+            '1800 l/mm, holographic' : {'rule' : 1800,
                             'blaze' : 'HOLO',
                             'partNumber' : '53-*-330H',
                         },
-            '53-*-420H' : {'rule' : 2400,
+            '2400 l/mm, holograpic' : {'rule' : 2400,
                             'blaze' : 'HOLO',
                             'partNumber' : '53-*-420H',
                         } 
             };
 
-spectrometers = { 'kymera193' : {'psf' : 60,
+// add grating selector
+var gratingSelectDiv = d3.select('body').append('div');
+gratingSelectDiv.append('span').text('Gratings to chart')
+var gratingSelect = gratingSelectDiv.append('select').attr('multiple','true');;
+ gratingSelect.on("change",function(d){ 
+    selected = d3.select(this) // select the select
+      .selectAll("option:checked")  // select the selected values
+      .each(function() { app['activeGratings'].push(this.value) }); // for each of those, get its value
+    createOrUpdateTable();  
+});
+Object.keys(gratings).forEach(function(key){
+    gratingSelect.append('option').property('value', key).text(key)
+})
+
+spectrometers = { 'Kymera 193' : {'psf' : 60,
                                  'dev' : -14,
                                 'fpt' : 4.56,
                                 'fl' : 193,
                                 'displayName' : 'Kymera 193',
                                 },
-                'kymera328' : {'psf' : 40,
+                'Kymera 328' : {'psf' : 40,
                                 'dev' : -11.8,
                                'fpt' : 4,
                                'fl' : 328,
                                'displayName' : 'Kymera 328'
                                }, 
 
-                'shamrock500' : {'psf' : 40,
+                'Shamrock 500' : {'psf' : 40,
                                'dev' : -11.5,
                               'fpt' : 3.752,
                               'fl' : 500,
                               'displayName' : 'Shamrock 500'
                               }, 
                 
-            'shamrock500' : {'psf' : 40,
+            'Shamrock 750' : {'psf' : 40,
                               'dev' : -7.39,
                              'fpt' : 1.083,
                              'fl' : 750,
@@ -240,6 +257,19 @@ spectrometers = { 'kymera193' : {'psf' : 60,
                              }, 
                 };
 
+// add spectrometer selector
+var spectDiv = d3.select('body').append('div');
+spectDiv.append('span').text('Spectrometers to chart')
+var spectSelect = spectDiv.append('select').attr('multiple','true');;
+ spectSelect.on("change",function(d){ 
+    selected = d3.select(this) // select the select
+      .selectAll("option:checked")  // select the selected values
+      .each(function() { app['activeSpect'].push(this.value) }); // for each of those, get its value
+    createOrUpdateTable();  
+});
+Object.keys(spectrometers).forEach(function(key){
+    spectSelect.append('option').property('value', key).text(key)
+})
 
 // lets redo the table code to work better here, cribbing from the last one as needed
 
@@ -265,12 +295,12 @@ function createOrUpdateTable(){
                     ];
 
     if (app['ramanExcWavelength']!=0){
-        var ramanLabels = ['Start, cm-1','End, cm-1','Bandwidth, cm-1', 'Resolution, cm-1']
+        var ramanLabels = ['Start, cm<sup>-1</sup>','End, cm<sup>-1</sup>','Bandwidth, cm<sup>-1</sup>', 'Resolution, cm<sup>-1</sup>']
         headerLabels = headerLabels.concat(ramanLabels);
     }
 
     headerLabels.forEach(function(label){
-        var headCell = headerRow.append('th').text(label);
+        var headCell = headerRow.append('th').html(label);
         headCell.attr('parameter' , label)
         headCell.on('click', function(){
             console.log(label);
@@ -290,16 +320,17 @@ function createOrUpdateTable(){
                 'Model' : 'dispersion',
                 'Start, nm' : 'Start Wavelength',
                 'End, nm' : 'End Wavelength',
-                'Start, cm-1' : 'ramanStart',
-                'End, cm-1' : 'ramanEnd',
-                'Bandwidth, cm-1' : 'ramanBandwidth', 
-                'Resolution, cm-1' : 'ramanRes'
+                'Start, cm<sup>-1</sup>' : 'ramanStart',
+                'End, cm<sup>-1</sup>' : 'ramanEnd',
+                'Bandwidth, cm<sup>-1</sup>' : 'ramanBandwidth', 
+                'Resolution, cm<sup>-1</sup>' : 'ramanRes'
     };
 
     // make and populate a list of objects corresponding to spectrometer / gratings pairs
     var combinations = []; 
     Object.keys(spectrometers).forEach(function(spec){
-        Object.keys(gratings).forEach(function(grat){
+        app['activeGratings'].forEach(function(grat){
+
             // iterate through each spectrometer spec + each grating grat
             var gratTilt = r(calcTilt(app['centerWavelength'], gratings[grat]['rule'], spectrometers[spec]['dev']), 2) || 'Out of Range';
             
@@ -321,7 +352,7 @@ function createOrUpdateTable(){
                 //'Center Wavelength' : app['centerWavelength'],
                 'End Wavelength' : r(wlObj['endWavelength'], 2) || '-',
                 'bandWidth' : r(wlObj['bandWidth'], 2) || '-',
-                'resolution' : r(wlObj['linearDispersion'] * (spectrometers[spec]['psf']/1000), 2) || '-',
+                'resolution' : r(wlObj['linearDispersion'] * (spectrometers[spec]['psf']/1000), 3) || '-',
 
             }
 
@@ -329,7 +360,7 @@ function createOrUpdateTable(){
                 newCombo['ramanStart'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['Start Wavelength'],2);
                 newCombo['ramanEnd'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['End Wavelength'],2);
                 newCombo['ramanBandwidth'] = r(10**7/newCombo['Start Wavelength'] - 10**7/newCombo['End Wavelength'],2);
-                newCombo['ramanRes'] = r( (10**7)/(app['centerWavelength'] - Number(newCombo['resolution'])) - ((10**7)/(app['centerWavelength'])), 2);
+                newCombo['ramanRes'] = r( (10**7)/(app['centerWavelength'] - Number(newCombo['resolution'])) - ((10**7)/(app['centerWavelength'])), 3);
             }
 
             combinations.push(newCombo)
