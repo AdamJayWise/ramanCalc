@@ -27,7 +27,9 @@ var app = { 'centerWavelength' : 500, // center wavelength in nm
             'bandWidth' : 0, // sensor bandwidth in nm
             'focalLength': 193, // spectrometer focal length in mm
             'sensorSize' : 25.6, // sensor width in mm
-            'focalPlaneTilt' : 4.56}; // camera focal plane tilt in degrees
+            'focalPlaneTilt' : 4.56, // camera focal plane tilt in degrees
+            'ascending' : 1
+    };
 
 var mainSVG = d3.select('body')
     .append('svg')
@@ -181,6 +183,14 @@ gratings = { '53-*-201R' : {'rule' : 150,
             '53-*-280R' : {'rule' : 1200,
                             'blaze' : 500,
                             'partNumber' : '53-*-270R',
+                        }, 
+            '53-*-330H' : {'rule' : 1800,
+                            'blaze' : 'HOLO',
+                            'partNumber' : '53-*-330H',
+                        },
+            '53-*-420H' : {'rule' : 2400,
+                            'blaze' : 'HOLO',
+                            'partNumber' : '53-*-420H',
                         } 
             };
 
@@ -222,6 +232,7 @@ function calcTilt(cwl, rule, dev){
 
 
 function createOrUpdateTable(){
+    console.log('called')
     d3.selectAll('table').remove();
     var resultTable = d3.select('body').append('table').attr('id','results');
     var headerRow = resultTable.append('tr');
@@ -235,15 +246,31 @@ function createOrUpdateTable(){
                         'Resolution, nm'];
 
     headerLabels.forEach(function(label){
-        headerRow.append('th').text(label);
-    });
+        var headCell = headerRow.append('th').text(label);
+        headCell.attr('parameter' , label)
+        headCell.on('click', function(){
+            console.log(label);
+            var self = d3.select(this);
+            var param = headerDict[d3.select(this).attr('parameter')];
+            app['currentParam'] = param;
+            app.ascending = app.ascending*-1;
+            createOrUpdateTable();
+            });
+        });
     
+    headerDict = {'Dispersion, nm/mm' : 'dispersion',
+                'Resolution, nm/mm' : 'resolution',
+                'Grating Angle' : 'gratingTilt',
+                'Bandwidth, nm' : 'bandWidth'};
+
     // make and populate a list of objects corresponding to spectrometer / gratings pairs
     var combinations = []; 
     Object.keys(spectrometers).forEach(function(spec){
         Object.keys(gratings).forEach(function(grat){
             // iterate through each spectrometer spec + each grating grat
             var gratTilt = r(calcTilt(app['centerWavelength'], gratings[grat]['rule'], spectrometers[spec]['dev']), 2) || 'Out of Range';
+            
+            
             var wlObj = calcWavelengthRange(app['centerWavelength'],
                                              gratings[grat]['rule'],
                                              spectrometers[spec]['dev'],
@@ -259,7 +286,7 @@ function createOrUpdateTable(){
                 'Start Wavelength' : r(wlObj['startWavelength'], 2) || '-',
                 //'Center Wavelength' : app['centerWavelength'],
                 'End Wavelength' : r(wlObj['endWavelength'], 2) || '-',
-                'Band Width' : r(wlObj['bandWidth'], 2) || '-',
+                'bandWidth' : r(wlObj['bandWidth'], 2) || '-',
                 'dispersion' : r(wlObj['linearDispersion'], 2) || '-',
                 'resolution' : r(wlObj['linearDispersion'] * (spectrometers[spec]['psf']/1000), 2) || '-',
 
@@ -268,9 +295,21 @@ function createOrUpdateTable(){
         });
     });
 
+
+    combinations.sort( function(a,b){
+        if(Number(a[app.currentParam]) > Number(b[app.currentParam])){
+            return -1 * app.ascending
+        }
+        else {return app.ascending}
+    });
+
+
     //append a row corresponding to each combination
     combinations.forEach(function(combo){
         var newRow = resultTable.append('tr');
+        if ( (Math.abs(Number(combo['gratingTilt'])) >= 32) | (typeof(combo['gratingTilt']) == typeof('yes'))){
+                newRow.classed('warning', true);
+        }
         Object.keys(combo).forEach(function(key){
             newRow.append('td').text(combo[key])
         })
