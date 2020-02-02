@@ -28,7 +28,8 @@ var app = { 'centerWavelength' : 500, // center wavelength in nm
             'focalLength': 193, // spectrometer focal length in mm
             'sensorSize' : 25.6, // sensor width in mm
             'focalPlaneTilt' : 4.56, // camera focal plane tilt in degrees
-            'ascending' : 1
+            'ascending' : 1,
+            'ramanExcWavelength' : 0,
     };
 
 var mainSVG = d3.select('body')
@@ -79,6 +80,7 @@ var indicators = ['deviationAngle',
 */
 
 var indicators = ['centerWavelength',
+                  'ramanExcWavelength',
                    'gratingTilt'].map(function(n){return createNumberDisplay('body',n)});
 
 
@@ -147,10 +149,14 @@ function updateDisplay(){
     createOrUpdateTable();
 }
 
-var cwlInput = d3.select('body').append('input');
+var cwlInputDiv = d3.select('body').append('div');
+cwlInputDiv.append('span').text('Center Wavelength, nm ')
+var cwlInput = cwlInputDiv.append('input');
+cwlInput.attr('value', app['centerWavelength']);
 cwlInput.on('input', function(){
-    app['centerWavelength'] = this.value;
+    app['centerWavelength'] = Number(this.value);
     updateDisplay();
+    createOrUpdateTable();
 })
 
 var cwlRange = d3.select('body').append('input');
@@ -158,11 +164,23 @@ cwlRange.attr('type', 'range')
     .attr('min', 200)
     .attr('max', 2000)
     .attr('value', app['centerWavelength'])
-    .style('display','block')
     .on('input', function(){
-        app['centerWavelength'] = this.value;
+        app['centerWavelength'] = Number(this.value);
         updateDisplay();
     })
+
+var ramanInputDiv = d3.select('body').append('div');
+ramanInputDiv.append('span').text('Raman Exc. Wavelength, nm ')
+var ramanInput = ramanInputDiv.append('input');
+ramanInput.attr('value', app['ramanExcWavelength'])
+ramanInput.style('display','inline')
+ramanInput.on('input', function(){
+    app['ramanExcWavelength'] = Number(this.value);
+    updateDisplay();
+    createOrUpdateTable();
+})
+
+
 
 /**
 ok what now... 
@@ -194,7 +212,7 @@ gratings = { '53-*-201R' : {'rule' : 150,
                         } 
             };
 
-spectrometers = { 'kymera193' : {'psf' : 40,
+spectrometers = { 'kymera193' : {'psf' : 60,
                                  'dev' : -14,
                                 'fpt' : 4.56,
                                 'fl' : 193,
@@ -232,18 +250,23 @@ function calcTilt(cwl, rule, dev){
 
 
 function createOrUpdateTable(){
-    console.log('called')
     d3.selectAll('table').remove();
     var resultTable = d3.select('body').append('table').attr('id','results');
     var headerRow = resultTable.append('tr');
     var headerLabels = ['Model',
-                         'Grating Rule (l/mm)',
+                         'Grating, l/mm',
                          'Grating Angle',
                         'Start, nm',
                         'End, nm',
                         'Bandwidth, nm',
                         'Dispersion, nm/mm',
-                        'Resolution, nm'];
+                        'Resolution, nm',
+                    ];
+
+    if (app['ramanExcWavelength']!=0){
+        var ramanLabels = ['Start, cm-1','End, cm-1','Bandwidth, cm-1', 'Resolution, cm-1']
+        headerLabels = headerLabels.concat(ramanLabels);
+    }
 
     headerLabels.forEach(function(label){
         var headCell = headerRow.append('th').text(label);
@@ -259,9 +282,18 @@ function createOrUpdateTable(){
         });
     
     headerDict = {'Dispersion, nm/mm' : 'dispersion',
-                'Resolution, nm/mm' : 'resolution',
+                'Resolution, nm' : 'resolution',
                 'Grating Angle' : 'gratingTilt',
-                'Bandwidth, nm' : 'bandWidth'};
+                'Bandwidth, nm' : 'bandWidth',
+                'Grating, l/mm' : 'rule',
+                'Model' : 'dispersion',
+                'Start, nm' : 'Start Wavelength',
+                'End, nm' : 'End Wavelength',
+                'Start, cm-1' : 'ramanStart',
+                'End, cm-1' : 'ramanEnd',
+                'Bandwidth, cm-1' : 'ramanBandwidth', 
+                'Resolution, cm-1' : 'ramanRes'
+    };
 
     // make and populate a list of objects corresponding to spectrometer / gratings pairs
     var combinations = []; 
@@ -277,20 +309,28 @@ function createOrUpdateTable(){
                                              spectrometers[spec]['fl'],
                                              gratTilt,
                                              spectrometers[spec]['fpt'],
-                                             16);
+                                             25.6   );
             var newCombo = {
                 'spectrometer' : spectrometers[spec]['displayName'],
                 //'focal length' : spectrometers[spec]['fl'],
                 'rule' : gratings[grat]['rule'],
                 'gratingTilt' : gratTilt,
+                'dispersion' : r(wlObj['linearDispersion'], 2) || '-',
                 'Start Wavelength' : r(wlObj['startWavelength'], 2) || '-',
                 //'Center Wavelength' : app['centerWavelength'],
                 'End Wavelength' : r(wlObj['endWavelength'], 2) || '-',
                 'bandWidth' : r(wlObj['bandWidth'], 2) || '-',
-                'dispersion' : r(wlObj['linearDispersion'], 2) || '-',
                 'resolution' : r(wlObj['linearDispersion'] * (spectrometers[spec]['psf']/1000), 2) || '-',
 
             }
+
+            if (app['ramanExcWavelength']!=0){
+                newCombo['ramanStart'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['Start Wavelength'],2);
+                newCombo['ramanEnd'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['End Wavelength'],2);
+                newCombo['ramanBandwidth'] = r(10**7/newCombo['Start Wavelength'] - 10**7/newCombo['End Wavelength'],2);
+                newCombo['ramanRes'] = r( (10**7)/(app['centerWavelength'] - Number(newCombo['resolution'])) - ((10**7)/(app['centerWavelength'])), 2);
+            }
+
             combinations.push(newCombo)
         });
     });
