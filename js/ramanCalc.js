@@ -221,6 +221,7 @@ var gratingSelectDiv = d3.select('body').append('div');
 gratingSelectDiv.append('span').text('Gratings to chart')
 var gratingSelect = gratingSelectDiv.append('select').attr('multiple','true');;
  gratingSelect.on("change",function(d){ 
+    app['activeGratings'] = [];
     selected = d3.select(this) // select the select
       .selectAll("option:checked")  // select the selected values
       .each(function() { app['activeGratings'].push(this.value) }); // for each of those, get its value
@@ -263,6 +264,7 @@ var spectDiv = d3.select('body').append('div');
 spectDiv.append('span').text('Spectrometers to chart')
 var spectSelect = spectDiv.append('select').attr('multiple','true');;
  spectSelect.on("change",function(d){ 
+    app['activeSpect'] = [];
     selected = d3.select(this) // select the select
       .selectAll("option:checked")  // select the selected values
       .each(function() { app['activeSpect'].push(this.value) }); // for each of those, get its value
