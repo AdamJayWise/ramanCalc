@@ -228,7 +228,7 @@ var gratingSelect = gratingSelectDiv.append('select').attr('multiple','true');;
     createOrUpdateTable();  
 });
 Object.keys(gratings).forEach(function(key){
-    gratingSelect.append('option').property('value', key).text(key)
+    gratingSelect.append('option').property('value', key).html(key)
 })
 
 spectrometers = { 'Kymera 193' : {'psf' : 60,
