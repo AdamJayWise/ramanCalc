@@ -193,6 +193,7 @@ include camera definitions?
 
 // create a table
 
+/*
 gratings = { '150 l/mm, 500 nm blaze' : {'rule' : 150,
                             'blaze' : 500,
                             'partNumber' : '53-*-201R', 
@@ -214,7 +215,7 @@ gratings = { '150 l/mm, 500 nm blaze' : {'rule' : 150,
                             'partNumber' : '53-*-420H',
                         } 
             };
-
+*/
 // add grating selector
 var gratingSelectDiv = d3.select('body').append('div');
 gratingSelectDiv.append('span').text('Gratings to chart')
@@ -328,7 +329,7 @@ function createOrUpdateTable(){
 
     // make and populate a list of objects corresponding to spectrometer / gratings pairs
     var combinations = []; 
-    Object.keys(spectrometers).forEach(function(spec){
+    app['activeSpect'].forEach(function(spec){
         app['activeGratings'].forEach(function(grat){
 
             // iterate through each spectrometer spec + each grating grat
