@@ -32,12 +32,9 @@ var app = { 'centerWavelength' : 500, // center wavelength in nm
             'ramanExcWavelength' : 0,
             'activeGratings' : [],
             'activeSpect' : [],
+            'activeCameras' : [],
     };
 
-var mainSVG = d3.select('body')
-    .append('svg')
-    .classed('mainSVG', true)
-    .attr('id','mainView');
 
 function createNumberDisplay(targetSelector, nameString){
     var displayDiv = d3.select(targetSelector).append('div');
@@ -63,95 +60,29 @@ function rad(angleInDegrees){
     return 2 * Math.PI * angleInDegrees / ( 360 )
 }
 
+
+function calcPixFactor(pixwidth){
+    if (pixwidth<14) return 1
+    if ( (pixwidth>=14) & (pixwidth<=50) ) return 0.4338*(pixwidth**0.3253);
+    if (pixwidth>50) return 1.55
+}
+
 // rounding function with specific number of decimal places d
 function r(n,d){
     return Math.round(n*10**d)/10**d;
 }
 // end of utility functions //
 
-/** 
-var indicators = ['deviationAngle',
-                 'startWavelength',
-                 'centerWavelength',
-                 'endWavelength',
-                 'bandWidth',
-                 'focalLength',
-                 'sensorSize',
-                 'grooveDensity',
-                  'gratingTilt'].map(function(n){return createNumberDisplay('body',n)});
-*/
-
-var indicators = ['centerWavelength',
-                  'ramanExcWavelength',
-                   'gratingTilt'].map(function(n){return createNumberDisplay('body',n)});
-
-
-var canvasHeight = 100;
-var canvasWidth = 100;
-mainSVG.style('height', canvasHeight + 'px');
-mainSVG.style('width', canvasWidth + 'px');
-
-// add a grating to the svg
-var gratingHeight = canvasHeight/20;
-var gratingWidth = canvasWidth/2;
-var gratingHolder = mainSVG.append('g');
-gratingHolder.attr('transform',`translate(${canvasWidth/2}, ${canvasHeight/2})`)
-var grating = gratingHolder.append('rect')
-grating.style('width', `${gratingWidth}px`);
-grating.style('height', `${gratingHeight}px`);
-grating.attr('x', `${-gratingWidth/2}px`);
-grating.attr('y', `0px`);
-
-// add incident ray
-var incidentRay = d3.select('#mainView')
-                        .append('line')
-                        .attr('x1', canvasWidth/2 + 300 * Math.sin(rad(app['deviationAngle'])))
-                        .attr('y1', canvasHeight/2 - 300 * Math.cos(rad(app['deviationAngle'])))
-                        .attr('x2', canvasWidth/2)
-                        .attr('y2', canvasHeight/2)
-                        .attr('stroke', 'black')
-                        .attr('stroke-width',1)
-
-// add refracted ray
-var incidentRay = d3.select('#mainView')
-                        .append('line')
-                        .attr('x1', canvasWidth/2 - 300 * Math.sin(rad(app['deviationAngle'])))
-                        .attr('y1', canvasHeight/2 - 300 * Math.cos(rad(app['deviationAngle'])))
-                        .attr('x2', canvasWidth/2)
-                        .attr('y2', canvasHeight/2)
-                        .attr('stroke', 'black')
-                        .attr('stroke-width',1)
-
-
 function updateDisplay(){
 
-    // redraw the grating tilt
-    app['gratingTilt'] = calculateTilt(app)||-75;
-
-    // calculate the angle of the incident and diffracted rays relative to the grating normal
-    var thetaInc = app['deviationAngle'] - app['gratingTilt'];
-    var thetaRefr = app['deviationAngle'] + app['gratingTilt'];
-
-    // calculate the difference in angle of the rays hitting the edge of the camera chip relative to the center wavelength
-    var thetaDiff = Math.asin(app['sensorSize']/2 * Math.cos(rad(app['focalPlaneTilt'])) / app['focalLength']);
-    app['startWavelength'] = 10**6 * (1/app['grooveDensity']) * ( Math.sin(rad(thetaInc)) - Math.sin(rad(thetaRefr) + thetaDiff) ) ;
-    app['endWavelength'] = 10**6 * (1/app['grooveDensity']) * ( Math.sin(rad(thetaInc)) - Math.sin(rad(thetaRefr) - thetaDiff) ) ;
-    app['bandWidth'] = app['endWavelength'] - app['startWavelength'];
-
-
-    var translateString = `translate(${canvasWidth/2}, ${canvasHeight/2})`;
-    var rotationString = `rotate(${app['gratingTilt']})`;
-    gratingHolder.attr('transform', translateString + rotationString);
-
-    // update the parameter displays
-    indicators.forEach( function(ind){
-        ind.text(ind.attr('parameter') + ' ' + Math.round( app[ind.attr('parameter')] * 100 ) / 100 )
-    });
-
+    // update the text input box if the slider has changed
+    cwlInput.attr('value',app['centerWavelength']);
+    // update the range if the text input box was changed
+    cwlRange.attr('value',app['centerWavelength']);
     createOrUpdateTable();
 }
 
-var cwlInputDiv = d3.select('body').append('div');
+var cwlInputDiv = d3.select('#wlConfigDiv').append('div');
 cwlInputDiv.append('span').text('Center Wavelength, nm ')
 var cwlInput = cwlInputDiv.append('input');
 cwlInput.attr('value', app['centerWavelength']);
@@ -161,7 +92,7 @@ cwlInput.on('input', function(){
     createOrUpdateTable();
 })
 
-var cwlRange = d3.select('body').append('input');
+var cwlRange = d3.select('#wlConfigDiv').append('input');
 cwlRange.attr('type', 'range')
     .attr('min', 200)
     .attr('max', 2000)
@@ -171,7 +102,7 @@ cwlRange.attr('type', 'range')
         updateDisplay();
     })
 
-var ramanInputDiv = d3.select('body').append('div');
+var ramanInputDiv = d3.select('#wlConfigDiv').append('div');
 ramanInputDiv.append('span').text('Raman Exc. Wavelength, nm ')
 var ramanInput = ramanInputDiv.append('input');
 ramanInput.attr('value', app['ramanExcWavelength'])
@@ -184,40 +115,8 @@ ramanInput.on('input', function(){
 
 
 
-
-/**
-ok what now... 
-show center wavelength, start wavelength and end wavelength
-include camera definitions?
- **/
-
-// create a table
-
-/*
-gratings = { '150 l/mm, 500 nm blaze' : {'rule' : 150,
-                            'blaze' : 500,
-                            'partNumber' : '53-*-201R', 
-                            },
-            '300 l/mm, 500 nm blaze' : {'rule' : 300,
-                            'blaze' : 500,
-                            'partNumber' : '53-*-270R',
-                        },
-            '1200 l/mm, 500 nm blaze' : {'rule' : 1200,
-                            'blaze' : 500,
-                            'partNumber' : '53-*-270R',
-                        }, 
-            '1800 l/mm, holographic' : {'rule' : 1800,
-                            'blaze' : 'HOLO',
-                            'partNumber' : '53-*-330H',
-                        },
-            '2400 l/mm, holograpic' : {'rule' : 2400,
-                            'blaze' : 'HOLO',
-                            'partNumber' : '53-*-420H',
-                        } 
-            };
-*/
 // add grating selector
-var gratingSelectDiv = d3.select('body').append('div');
+var gratingSelectDiv = d3.select('#gratingConfigDiv').append('div');
 gratingSelectDiv.append('span').text('Gratings to chart')
 var gratingSelect = gratingSelectDiv.append('select').attr('multiple','true');;
  gratingSelect.on("change",function(d){ 
@@ -260,8 +159,8 @@ spectrometers = { 'Kymera 193' : {'psf' : 60,
                 };
 
 // add spectrometer selector
-var spectDiv = d3.select('body').append('div');
-spectDiv.append('span').text('Spectrometers to chart')
+var spectDiv = d3.select('#specrometerConfigDiv').append('div');
+spectDiv.append('span').text('Spectrometers to chart').style('display','block')
 var spectSelect = spectDiv.append('select').attr('multiple','true');;
  spectSelect.on("change",function(d){ 
     app['activeSpect'] = [];
@@ -273,6 +172,43 @@ var spectSelect = spectDiv.append('select').attr('multiple','true');;
 Object.keys(spectrometers).forEach(function(key){
     spectSelect.append('option').property('value', key).text(key)
 })
+
+function createSelector(targetDivSelector, labelText, activeItemArray, sourceObject){
+    // add camera selector
+    var newDiv = d3.select(targetDivSelector).append('div');
+    newDiv.append('span').text(labelText);
+    var newSelect = newDiv.append('select').attr('multiple','true');;
+    newSelect.on("change",function(d){ 
+        activeItemArray = [];
+        selected = d3.select(this) // select the select
+        .selectAll("option:checked")  // select the selected values
+        .each(function() { activeItemArray.push(this.value) }); // for each of those, get its value
+        console.log(activeItemArray)
+        createOrUpdateTable();  
+    });
+    Object.keys(sourceObject).forEach(function(key){
+        newSelect.append('option').property('value', key).text(key)
+    })
+}
+
+//createSelector('#cameraConfigDiv', 'Cameras to chart', app['activeCameras'], cameraDefs);
+
+
+// add camera selector
+var camDiv = d3.select('#cameraConfigDiv').append('div');
+camDiv.append('span').text('Cameras to chart')
+var camSelect = camDiv.append('select').attr('multiple','true');;
+ camSelect.on("change",function(d){ 
+    app['activeCameras'] = [];
+    selected = d3.select(this) // select the select
+      .selectAll("option:checked")  // select the selected values
+      .each(function() { app['activeCameras'].push(this.value) }); // for each of those, get its value
+    createOrUpdateTable();  
+});
+Object.keys(cameraDefs).forEach(function(key){
+    camSelect.append('option').property('value', key).text(key)
+})
+
 
 // lets redo the table code to work better here, cribbing from the last one as needed
 
@@ -286,7 +222,8 @@ function createOrUpdateTable(){
     d3.selectAll('table').remove();
     var resultTable = d3.select('body').append('table').attr('id','results');
     var headerRow = resultTable.append('tr');
-    var headerLabels = ['Model',
+    var headerLabels = ['Spectrometer',
+                        'Camera',
                          'Grating, l/mm',
                          'Grating Angle',
                          'Dispersion, nm/mm',
@@ -316,6 +253,7 @@ function createOrUpdateTable(){
         });
     
     headerDict = {'Dispersion, nm/mm' : 'dispersion',
+                'Camera' : 'camera',
                 'Resolution, nm' : 'resolution',
                 'Grating Angle' : 'gratingTilt',
                 'Bandwidth, nm' : 'bandWidth',
@@ -333,40 +271,46 @@ function createOrUpdateTable(){
     var combinations = []; 
     app['activeSpect'].forEach(function(spec){
         app['activeGratings'].forEach(function(grat){
+            app['activeCameras'].forEach(function(cam){
 
-            // iterate through each spectrometer spec + each grating grat
-            var gratTilt = r(calcTilt(app['centerWavelength'], gratings[grat]['rule'], spectrometers[spec]['dev']), 2) || 'Out of Range';
-            
-            
-            var wlObj = calcWavelengthRange(app['centerWavelength'],
-                                             gratings[grat]['rule'],
-                                             spectrometers[spec]['dev'],
-                                             spectrometers[spec]['fl'],
-                                             gratTilt,
-                                             spectrometers[spec]['fpt'],
-                                             25.6   );
-            var newCombo = {
-                'spectrometer' : spectrometers[spec]['displayName'],
-                //'focal length' : spectrometers[spec]['fl'],
-                'rule' : gratings[grat]['rule'],
-                'gratingTilt' : gratTilt,
-                'dispersion' : r(wlObj['linearDispersion'], 2) || '-',
-                'Start Wavelength' : r(wlObj['startWavelength'], 2) || '-',
-                //'Center Wavelength' : app['centerWavelength'],
-                'End Wavelength' : r(wlObj['endWavelength'], 2) || '-',
-                'bandWidth' : r(wlObj['bandWidth'], 2) || '-',
-                'resolution' : r(wlObj['linearDispersion'] * (spectrometers[spec]['psf']/1000), 3) || '-',
+                var pixFactor = calcPixFactor(cameraDefs[cam]['xPixelSize']);
 
-            }
+                // iterate through each spectrometer spec + each grating grat
+                var gratTilt = r(calcTilt(app['centerWavelength'], gratings[grat]['rule'], spectrometers[spec]['dev']), 2) || 'Out of Range';
+                
+                
+                var wlObj = calcWavelengthRange(app['centerWavelength'],
+                                                gratings[grat]['rule'],
+                                                spectrometers[spec]['dev'],
+                                                spectrometers[spec]['fl'],
+                                                gratTilt,
+                                                spectrometers[spec]['fpt'],
+                                                cameraDefs[cam]['xPixels'],
+                                                cameraDefs[cam]['xPixelSize']  );
+                var newCombo = {
+                    'spectrometer' : spectrometers[spec]['displayName'],
+                    'camera' : cam,
+                    //'focal length' : spectrometers[spec]['fl'],
+                    'rule' : gratings[grat]['rule'],
+                    'gratingTilt' : gratTilt,
+                    'dispersion' : r(wlObj['linearDispersion'], 2) || '-',
+                    'Start Wavelength' : r(wlObj['startWavelength'], 2) || '-',
+                    //'Center Wavelength' : app['centerWavelength'],
+                    'End Wavelength' : r(wlObj['endWavelength'], 2) || '-',
+                    'bandWidth' : r(wlObj['bandWidth'], 2) || '-',
+                    'resolution' : r(pixFactor * wlObj['linearDispersion'] * (spectrometers[spec]['psf']/1000), 3) || '-',
 
-            if (app['ramanExcWavelength']!=0){
-                newCombo['ramanStart'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['Start Wavelength'],2);
-                newCombo['ramanEnd'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['End Wavelength'],2);
-                newCombo['ramanBandwidth'] = r(10**7/newCombo['Start Wavelength'] - 10**7/newCombo['End Wavelength'],2);
-                newCombo['ramanRes'] = r( (10**7)/(app['centerWavelength'] - Number(newCombo['resolution'])) - ((10**7)/(app['centerWavelength'])), 3);
-            }
+                }
 
-            combinations.push(newCombo)
+                if (app['ramanExcWavelength']!=0){
+                    newCombo['ramanStart'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['Start Wavelength'],2);
+                    newCombo['ramanEnd'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['End Wavelength'],2);
+                    newCombo['ramanBandwidth'] = r(10**7/newCombo['Start Wavelength'] - 10**7/newCombo['End Wavelength'],2);
+                    newCombo['ramanRes'] = r( (10**7)/(app['centerWavelength'] - Number(newCombo['resolution'])) - ((10**7)/(app['centerWavelength'])), 3);
+                }
+
+                combinations.push(newCombo)
+            });
         });
     });
 
@@ -395,12 +339,14 @@ function createOrUpdateTable(){
 
 createOrUpdateTable();
 
-function calcWavelengthRange(cwl, rule, dev, fl, tilt, fpt, sensorSize){
+function calcWavelengthRange(cwl, rule, dev, fl, tilt, fpt, xPixels, xPixelSize){
+    // calcualte the sensor size
+    var sensorSize = xPixels * xPixelSize / 1000;
     // calculate the angle of the incident and diffracted rays relative to the grating normal
     var thetaInc = dev - tilt;
     var thetaRefr = dev + tilt;
     // calculate the difference in angle of the rays hitting the edge of the camera chip relative to the center wavelength
-    var thetaDiff = Math.asin( sensorSize/2 * Math.cos(rad(fpt)) / fl);
+    var thetaDiff = Math.atan( sensorSize/2 * Math.cos(rad(fpt)) / fl);
     var startWavelength  = 10**6 * (1/rule) * ( Math.sin(rad(thetaInc)) - Math.sin(rad(thetaRefr) + thetaDiff) ) ;
     var endWavelength = 10**6 * (1/rule) * ( Math.sin(rad(thetaInc)) - Math.sin(rad(thetaRefr) - thetaDiff) ) ;
     var bandWidth = endWavelength - startWavelength;

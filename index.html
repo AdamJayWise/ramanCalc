@@ -34,14 +34,44 @@
                 color:red;
                 font-weight: lighter;
             }
+
+            .guiContainer{
+                display : flex;
+                width : 100%;
+            }
+            .guiSubPanel{
+                display : flex;
+                flex-direction : column;
+                border : 1px solid black;
+                padding : 5px;
+            }
+            
+            .guiSubPanel *{
+                display : block;
+            }
+
+            select {
+                width : 95%;
+                border : none;
+            }
+
+            
         </style>
     </head>
 
     <body>
         ramanCalc - Initial 
+        <div id = 'guiDiv' class = 'guiContainer'>
+            <div id = "wlConfigDiv" class = 'guiSubPanel'></div>
+            <div id = "specrometerConfigDiv" class = 'guiSubPanel'></div>
+            <div id = "gratingConfigDiv" class = 'guiSubPanel'></div>
+            <div id = "cameraConfigDiv" class = 'guiSubPanel'></div>
+        </div>
     </body>
 
     <script src = 'js/d3.min.js'></script>
+    <script src = 'js/cameras.js'><</script>
+    <script src = 'js/gratingEfficencies.js'></script>
     <script src = 'js/gratings.js'></script>
     <script src = 'js/ramanCalc.js'></script>
 </html>
