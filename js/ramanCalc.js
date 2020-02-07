@@ -33,6 +33,7 @@ var app = { 'centerWavelength' : 500, // center wavelength in nm
             'activeGratings' : [],
             'activeSpect' : [],
             'activeCameras' : [],
+            'activeWavelengths' : false,
     };
 
 
@@ -209,6 +210,23 @@ Object.keys(cameraDefs).forEach(function(key){
     camSelect.append('option').property('value', key).text(key)
 })
 
+// add a wavelength efficiency input
+var effInputDiv = d3.select('#effConfigDiv').append('div')
+effInputDiv.append('span').text('Wavelengths to Chart')
+var effInput = effInputDiv.append('input').on('change', function(d){
+    app['activeWavelengths'] = 0;
+    var rawInput = effInput.property('value');
+    if(!isNaN(Number(rawInput))){
+        app['activeWavelengths'] = [Number(rawInput)];
+    }
+
+    else {
+        app['activeWavelengths'] = rawInput.split(',').map(a=>Number(a.trim()));
+    }
+
+    console.log(app['activeWavelengths'])
+    createOrUpdateTable();
+})
 
 // lets redo the table code to work better here, cribbing from the last one as needed
 
@@ -237,6 +255,12 @@ function createOrUpdateTable(){
     if (app['ramanExcWavelength']!=0){
         var ramanLabels = ['Start, cm<sup>-1</sup>','End, cm<sup>-1</sup>','Bandwidth, cm<sup>-1</sup>', 'Resolution, cm<sup>-1</sup>']
         headerLabels = headerLabels.concat(ramanLabels);
+    }
+
+    if (app['activeWavelengths']){
+        var wavelengthHeaderLabels = app['activeWavelengths'].map(a=>`e@${a}nm`);
+        console.log(wavelengthHeaderLabels)
+        headerLabels = headerLabels.concat(wavelengthHeaderLabels)
     }
 
     headerLabels.forEach(function(label){
@@ -307,6 +331,17 @@ function createOrUpdateTable(){
                     newCombo['ramanEnd'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['End Wavelength'],2);
                     newCombo['ramanBandwidth'] = r(10**7/newCombo['Start Wavelength'] - 10**7/newCombo['End Wavelength'],2);
                     newCombo['ramanRes'] = r( (10**7)/(app['centerWavelength'] - Number(newCombo['resolution'])) - ((10**7)/(app['centerWavelength'])), 3);
+                }
+
+                if (app['activeWavelengths']){
+                    app['activeWavelengths'].forEach(function(l){
+                        if (ge[gratings[grat]['Part Number']]){
+                            newCombo[`eff@${l}`] = r(ge[gratings[grat]['Part Number']].getEff(l), 1);
+                        }
+                        else {
+                            newCombo[`eff@${l}`] = '-';
+                        }
+                    })
                 }
 
                 combinations.push(newCombo)
