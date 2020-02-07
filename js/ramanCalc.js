@@ -248,7 +248,6 @@ function createOrUpdateTable(){
                         'Start, nm',
                         'End, nm',
                         'Bandwidth, nm',
-
                         'Resolution, nm',
                     ];
 
@@ -258,7 +257,7 @@ function createOrUpdateTable(){
     }
 
     if (app['activeWavelengths']){
-        var wavelengthHeaderLabels = app['activeWavelengths'].map(a=>`e@${a}nm`);
+        var wavelengthHeaderLabels = app['activeWavelengths'].map(a=>`&eta;@${a}nm`);
         console.log(wavelengthHeaderLabels)
         headerLabels = headerLabels.concat(wavelengthHeaderLabels)
     }
@@ -335,11 +334,14 @@ function createOrUpdateTable(){
 
                 if (app['activeWavelengths']){
                     app['activeWavelengths'].forEach(function(l){
+
+                        headerDict[`&eta;@${l}nm`] = `eff@${l}`;
+
                         if (ge[gratings[grat]['Part Number']]){
                             newCombo[`eff@${l}`] = r(ge[gratings[grat]['Part Number']].getEff(l), 1);
                         }
                         else {
-                            newCombo[`eff@${l}`] = '-';
+                            newCombo[`eff@${l}`] = 0;
                         }
                     })
                 }
