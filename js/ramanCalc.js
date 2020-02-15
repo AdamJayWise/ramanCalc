@@ -124,7 +124,9 @@ var gratingSelect = gratingSelectDiv.append('select').attr('multiple','true');;
     app['activeGratings'] = [];
     selected = d3.select(this) // select the select
       .selectAll("option:checked")  // select the selected values
-      .each(function() { app['activeGratings'].push(this.value) }); // for each of those, get its value
+      .each(function() { 
+          app['activeGratings'].push(this.value);
+          console.log(gratings[this.value]['Part Number']) }); // for each of those, get its value
     createOrUpdateTable();  
 });
 Object.keys(gratings).forEach(function(key){
@@ -183,9 +185,11 @@ function createSelector(targetDivSelector, labelText, activeItemArray, sourceObj
         activeItemArray = [];
         selected = d3.select(this) // select the select
         .selectAll("option:checked")  // select the selected values
-        .each(function() { activeItemArray.push(this.value) }); // for each of those, get its value
-        console.log(activeItemArray)
+        .each(function() { 
+            activeItemArray.push(this.value);
+            }); // for each of those, get its value
         createOrUpdateTable();  
+        console.log('hello')
     });
     Object.keys(sourceObject).forEach(function(key){
         newSelect.append('option').property('value', key).text(key)
