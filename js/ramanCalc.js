@@ -382,11 +382,12 @@ function calcWavelengthRange(cwl, rule, dev, fl, tilt, fpt, xPixels, xPixelSize)
     // calculate the angle of the incident and diffracted rays relative to the grating normal
     var thetaInc = dev - tilt;
     var thetaRefr = dev + tilt;
+    var tiltFactor = Math.cos(rad(fpt));
     // calculate the difference in angle of the rays hitting the edge of the camera chip relative to the center wavelength
-    var thetaDiff = Math.atan( sensorSize/2 * Math.cos(rad(fpt)) / fl);
+    var thetaDiff = Math.atan( sensorSize/2 / fl); // for whatever reason the original andor #s don't inlcude fpt here
     var startWavelength  = 10**6 * (1/rule) * ( Math.sin(rad(thetaInc)) - Math.sin(rad(thetaRefr) + thetaDiff) ) ;
     var endWavelength = 10**6 * (1/rule) * ( Math.sin(rad(thetaInc)) - Math.sin(rad(thetaRefr) - thetaDiff) ) ;
-    var bandWidth = endWavelength - startWavelength;
+    var bandWidth = (endWavelength - startWavelength) ;
     var linearDispersion = bandWidth / sensorSize;
     return {'startWavelength' : startWavelength,
             'endWavelength' : endWavelength,
