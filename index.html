@@ -79,11 +79,12 @@
             input {
                 border : none;
                 background : #eee;
+                padding : 2px;
             }
 
             #directionDiv {
                 background : #ddd;
-                margin : 12px;
+                margin : 5px;
                 padding : 12px;
             }
 
@@ -96,11 +97,15 @@
             }
 
             #graphs {
-                margin-left : 10px;
+                margin : 10px;
+                padding : 10px;
+                border-top : 1px solid black;
+                border-bottom : 1px solid black;
             }
 
-            #graphs div{
-
+            #graphs span{
+                font-size : 90%;
+                font-weight : 800;
             }
             
         </style>
@@ -137,10 +142,13 @@
                 </div>
             </div>
         </div>
-        <div>
-            Grating Efficiency Graphs (click category to expand)
+     
             <div id = "graphs">
+                <div class = "tip">Grating Efficiency Graphs (click category to expand, click trace to add or remove)</div>   
             </div>
+
+        <div class = "results">
+            Results
         </div>
     </body>
 

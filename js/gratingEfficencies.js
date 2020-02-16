@@ -126,6 +126,11 @@ function createGraph(ruleRange, targetSelector){
                     console.log(g['partNumber']);
                     createOrUpdateTable();
                 }
+                else {
+                    var thisIndex = app['activeGratings'].indexOf(lookupTable[g['partNumber']]);
+                    app['activeGratings'].splice(thisIndex, 1);
+                    createOrUpdateTable();
+                }
             })
     })
 
