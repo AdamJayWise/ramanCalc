@@ -23,16 +23,13 @@ function grating(paramObj){
         var wavelengths = Object.keys(self.Eff).map(parseFloat)
         wavelengths.sort(function(a,b){return a-b})  // sort the wavelength keys in case they're out of order
 
-        if (lambda > wavelengths.slice(-1)){
-            return 0
+        if (lambda < wavelengths[0]){
+            return 0;
         }
 
-        if (lambda < wavelengths.slice(0)){
-            return 0
+        if (lambda > wavelengths.slice(-1)[0]){
+            return 0;
         }
-
-
-
 
         var indexAbove = wavelengths.findIndex( function(x){return x>lambda});
         var wavelengthBounds = [wavelengths[indexAbove-1], wavelengths[indexAbove]];
@@ -81,8 +78,8 @@ function rando(){
 
 
 
-function createGraph(ruleRange){
-    var graphDiv = d3.select('body').append('div')
+function createGraph(ruleRange, targetSelector){
+    var graphDiv = d3.select(targetSelector).append('div')
     var textLabel = graphDiv
         .append('span')
 
@@ -157,4 +154,4 @@ function createGraph(ruleRange){
 }
 
 var ruleRanges = [[50,140], [150,150], [300,300], [1200,1400]];
-ruleRanges.forEach(function(r){createGraph(r)});
+ruleRanges.forEach(function(r){createGraph(r, '#graphs')});

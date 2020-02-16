@@ -216,7 +216,7 @@ Object.keys(cameraDefs).forEach(function(key){
 
 // add a wavelength efficiency input
 var effInputDiv = d3.select('#effConfigDiv').append('div')
-effInputDiv.append('div').text('Wavelengths to Chart')
+effInputDiv.append('div').text('Detection Wavelengths')
 var effInput = effInputDiv.append('input').on('change', function(d){
     app['activeWavelengths'] = 0;
     var rawInput = effInput.property('value');
@@ -246,12 +246,13 @@ function createOrUpdateTable(){
     var headerRow = resultTable.append('tr');
     var headerLabels = ['Spectrometer',
                         'Camera',
-                         'Grating, l/mm',
+                         'Rule, l/mm',
+                         'Blaze',
                          'Grating Angle',
                          'Dispersion, nm/mm',
                         'Start, nm',
                         'End, nm',
-                        'Bandwidth, nm',
+                        'Bandpass, nm',
                         'Resolution, nm',
                     ];
 
@@ -283,8 +284,9 @@ function createOrUpdateTable(){
                 'Camera' : 'camera',
                 'Resolution, nm' : 'resolution',
                 'Grating Angle' : 'gratingTilt',
-                'Bandwidth, nm' : 'bandWidth',
-                'Grating, l/mm' : 'rule',
+                'Bandpass, nm' : 'bandWidth',
+                'Rule, l/mm' : 'rule',
+                'Blaze, nm' : 'blaze',
                 'Model' : 'dispersion',
                 'Start, nm' : 'Start Wavelength',
                 'End, nm' : 'End Wavelength',
@@ -319,6 +321,7 @@ function createOrUpdateTable(){
                     'camera' : cam,
                     //'focal length' : spectrometers[spec]['fl'],
                     'rule' : gratings[grat]['rule'],
+                    'blaze' : gratings[grat]['Blaze'],
                     'gratingTilt' : gratTilt,
                     'dispersion' : r(wlObj['linearDispersion'], 2) || '-',
                     'Start Wavelength' : r(wlObj['startWavelength'], 2) || '-',
@@ -371,7 +374,7 @@ function createOrUpdateTable(){
                 newRow.classed('warning', true);
         }
         Object.keys(combo).forEach(function(key){
-            newRow.append('td').text(combo[key])
+            newRow.append('td').html(combo[key])
         })
     });
 

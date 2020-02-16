@@ -49,16 +49,17 @@
             }
 
             .guiContainer{
-                display : flex;
+                display : block;
                 width : 100%;
+                flex-direction : row;
             }
             
             .guiSubPanel{
-                display : flex;
-                flex-direction : column;
+
                 border : 1px solid black;
                 padding : 5px;
                 display : block;
+                margin : 5px;
             }
 
             select {
@@ -75,31 +76,71 @@
                 stroke-linecap : round;
             }
 
-            .guiSubPanel span {
-                background : darkblue;
-                color : white;
-                text-align : center;
-                padding : 1px 5px 1px 5px;
-                margin : 2px 8px 12px 8px;
-            }
-
             input {
                 border : none;
                 background : #eee;
             }
 
+            #directionDiv {
+                background : #ddd;
+                margin : 12px;
+                padding : 12px;
+            }
+
+            .tip {
+                font-size: 80%;
+                border-bottom : 1px solid black;
+                margin-bottom : 5px;
+                padding-bottom : 5px;
+
+            }
+
+            #graphs {
+                margin-left : 10px;
+            }
+
+            #graphs div{
+
+            }
             
         </style>
     </head>
 
     <body>
-        ramanCalc - Initial 
+        <div id = "directionDiv">
+            SPECTROGENIUS V0.1
+        </div>
         <div id = 'guiDiv' class = 'guiContainer'>
-            <div id = "wlConfigDiv" class = 'guiSubPanel'></div>
-            <div id = "specrometerConfigDiv" class = 'guiSubPanel'></div>
-            <div id = "gratingConfigDiv" class = 'guiSubPanel'></div>
-            <div id = "cameraConfigDiv" class = 'guiSubPanel'></div>
-            <div id = "effConfigDiv" class = 'guiSubPanel'></div>
+            <div id = "wlConfigDiv" class = 'guiSubPanel'>
+                <div class = "tip">
+                 1.  Select a center wavelength, and if desired, a Raman excitation wavelength
+                </div>
+            </div>
+            <div id = "specrometerConfigDiv" class = 'guiSubPanel'>
+                <div class = "tip">
+                    2.  Select one or more spectrometers
+                </div>
+            </div>
+            <div id = "gratingConfigDiv" class = 'guiSubPanel'>
+                <div class = "tip">
+                    3.  Select one or more gratings, or click a grating category below to expand a graph, and then click on a trace to add that grating
+                </div>
+            </div>
+            <div id = "cameraConfigDiv" class = 'guiSubPanel'>
+                <div class = "tip">
+                    4.  Select one or more cameras
+                </div>
+            </div>
+            <div id = "effConfigDiv" class = 'guiSubPanel'>
+                <div class = "tip">
+                    5.  Enter one or more wavelengths (separated by commas) at which to calculate grating efficiency
+                </div>
+            </div>
+        </div>
+        <div>
+            Grating Efficiency Graphs (click category to expand)
+            <div id = "graphs">
+            </div>
         </div>
     </body>
 
