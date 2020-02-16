@@ -52,24 +52,40 @@
                 display : flex;
                 width : 100%;
             }
+            
             .guiSubPanel{
                 display : flex;
                 flex-direction : column;
                 border : 1px solid black;
                 padding : 5px;
-            }
-            
-            .guiSubPanel *{
                 display : block;
             }
 
             select {
                 width : 95%;
                 border : none;
+
             }
 
             .hidden{
                 display : none;
+            }
+
+            path {
+                stroke-linecap : round;
+            }
+
+            .guiSubPanel span {
+                background : darkblue;
+                color : white;
+                text-align : center;
+                padding : 1px 5px 1px 5px;
+                margin : 2px 8px 12px 8px;
+            }
+
+            input {
+                border : none;
+                background : #eee;
             }
 
             
@@ -88,8 +104,9 @@
     </body>
 
     <script src = 'js/d3.min.js'></script>
-    <script src = 'js/cameras.js'><</script>
+    <script src = 'js/cameras.js'></script>
     <script src = 'js/gratings.js'></script>
+    <script src = 'js/gratingEfficiencyJSON.js'></script>
     <script src = 'js/gratingEfficencies.js'></script>
     <script src = 'js/ramanCalc.js'></script>
 </html>

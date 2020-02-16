@@ -84,7 +84,7 @@ function updateDisplay(){
 }
 
 var cwlInputDiv = d3.select('#wlConfigDiv').append('div');
-cwlInputDiv.append('span').text('Center Wavelength, nm ')
+cwlInputDiv.append('div').text('Center Wavelength, nm ')
 var cwlInput = cwlInputDiv.append('input');
 cwlInput.attr('value', app['centerWavelength']);
 cwlInput.on('input', function(){
@@ -104,7 +104,7 @@ cwlRange.attr('type', 'range')
     })
 
 var ramanInputDiv = d3.select('#wlConfigDiv').append('div');
-ramanInputDiv.append('span').text('Raman Exc. Wavelength, nm ')
+ramanInputDiv.append('div').text('Raman Exc. Wavelength, nm ')
 var ramanInput = ramanInputDiv.append('input');
 ramanInput.attr('value', app['ramanExcWavelength'])
 ramanInput.style('display','inline')
@@ -118,7 +118,7 @@ ramanInput.on('input', function(){
 
 // add grating selector
 var gratingSelectDiv = d3.select('#gratingConfigDiv').append('div');
-gratingSelectDiv.append('span').text('Gratings to chart')
+gratingSelectDiv.append('div').text('Gratings')
 var gratingSelect = gratingSelectDiv.append('select').attr('multiple','true');;
  gratingSelect.on("change",function(d){ 
     app['activeGratings'] = [];
@@ -163,7 +163,7 @@ spectrometers = { 'Kymera 193' : {'psf' : 60,
 
 // add spectrometer selector
 var spectDiv = d3.select('#specrometerConfigDiv').append('div');
-spectDiv.append('span').text('Spectrometers to chart').style('display','block')
+spectDiv.append('div').text('Spectrometers').style('display','block')
 var spectSelect = spectDiv.append('select').attr('multiple','true');;
  spectSelect.on("change",function(d){ 
     app['activeSpect'] = [];
@@ -179,7 +179,7 @@ Object.keys(spectrometers).forEach(function(key){
 function createSelector(targetDivSelector, labelText, activeItemArray, sourceObject){
     // add camera selector
     var newDiv = d3.select(targetDivSelector).append('div');
-    newDiv.append('span').text(labelText);
+    newDiv.append('div').text(labelText);
     var newSelect = newDiv.append('select').attr('multiple','true');;
     newSelect.on("change",function(d){ 
         activeItemArray = [];
@@ -201,7 +201,7 @@ function createSelector(targetDivSelector, labelText, activeItemArray, sourceObj
 
 // add camera selector
 var camDiv = d3.select('#cameraConfigDiv').append('div');
-camDiv.append('span').text('Cameras to chart')
+camDiv.append('div').text('Cameras')
 var camSelect = camDiv.append('select').attr('multiple','true');;
  camSelect.on("change",function(d){ 
     app['activeCameras'] = [];
@@ -216,7 +216,7 @@ Object.keys(cameraDefs).forEach(function(key){
 
 // add a wavelength efficiency input
 var effInputDiv = d3.select('#effConfigDiv').append('div')
-effInputDiv.append('span').text('Wavelengths to Chart')
+effInputDiv.append('div').text('Wavelengths to Chart')
 var effInput = effInputDiv.append('input').on('change', function(d){
     app['activeWavelengths'] = 0;
     var rawInput = effInput.property('value');
