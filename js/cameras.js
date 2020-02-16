@@ -60,8 +60,8 @@ var cameraDefs = {
             displayName: 'Balor'},
 
     
-        'Sona 4.2' : {
-        shortName : 'Sona42',
+        'Sona 4.2B-11' : {
+        shortName : 'Sona42b11',
         xPixels : 2048,
         yPixels : 2048,
         xPixelSize : 11,
@@ -77,7 +77,26 @@ var cameraDefs = {
         darkCurrent : 0.2,
         containerDivID : 'subContainer',
         model : models['Sona'],
-        displayName: 'Sona 4.2'},
+        displayName: 'Sona 4.2B-11'},
+
+        'Sona 4.2B-6' : {
+            shortName : 'Sona42b6',
+            xPixels : 2048,
+            yPixels : 2048,
+            xPixelSize : 6,
+            yPixelSize : 6,
+            readNoise : 1.6,
+            readNoiseFast : 1.6,
+            readNoiseSlow : 1.6,
+            QE : 0.95,
+            CIC : 0,
+            frameRateHz : 24,
+            frameRateHzFast : 24,
+            frameRateHzSlow: 0.03,
+            darkCurrent : 0.2,
+            containerDivID : 'subContainer',
+            model : models['Sona'],
+            displayName: 'Sona 4.2B-6'},
 
     'Idus 420' : {
         shortName : 'idus420',
@@ -96,7 +115,7 @@ var cameraDefs = {
         containerDivID : 'subContainer',
         displayName : 'Idus 420 BEX2-DD'},
 
-    'iXon Ultra 888' : {
+    'iXon 888 Ultra / Life' : {
         shortName : 'iXonUltra888',
         xPixels : 1024,
         yPixels : 1024,
@@ -116,23 +135,67 @@ var cameraDefs = {
         model : models['BV'],
         displayName: 'iXon Ultra 888 BV'},
 
-    'Newton 971' : {
-        shortName : 'Newton971',
-        xPixels : 1600,
-        yPixels : 400,
-        xPixelSize : 16,
-        yPixelSize : 16,
-        readNoise : 0.04,
-        readNoiseFast : 0.04,
-        readNoiseSlow : 0.0028,
-        QE : 0.95,
-        frameRateHz : 10,
-        frameRateHzFast : 10,
-        frameRateHzSlow: 0.03,
-        darkCurrent : 0.00020,
-        containerDivID : 'subContainer',
-        emGain : 1, 
-        displayName: 'Newton 971 BV'},
+        'iXon 897 Ultra / Life' : {
+            shortName : 'iXonUltra888',
+            xPixels : 512,
+            yPixels : 512,
+            xPixelSize : 16,
+            yPixelSize : 16,    
+            readNoise : 0.13,
+            readNoiseFast: 0.13,
+            readNoiseSlow: 0.012,
+            QE : 0.95,
+            CIC : 0.005,
+            darkCurrent : 0.00011,
+            frameRateHz : 26,
+            frameRateHzFast: 26,
+            frameRateHzSlow: 0.03,
+            emGain : 1,
+            containerDivID : 'subContainer',
+            model : models['BV'],
+            displayName: 'iXon Ultra 897 BV'},
+
+        'Newton 920P' : {
+            shortName : 'newton920p',
+            xPixels : 1024,
+            yPixels : 255,
+            xPixelSize : 26,
+            yPixelSize : 26,
+            readNoise : 0.04,
+            readNoiseFast : 0.04,
+            readNoiseSlow : 0.0028,
+            QE : 0.95,
+            frameRateHz : 10,
+            frameRateHzFast : 10,
+            frameRateHzSlow: 0.03,
+            darkCurrent : 0.00020,
+            containerDivID : 'subContainer',
+            emGain : 1, 
+            displayName: 'Newton 920P'},
+
+        'Newton 940P' : {
+            shortName : 'newton940p',
+            xPixels : 2048,
+            yPixels : 512,
+            xPixelSize : 13.5,
+            yPixelSize : 13.5,
+            displayName: 'Newton 920P'},
+
+        'Newton 970P' : {
+            shortName : 'newton970p',
+            xPixels : 1600,
+            yPixels : 200,
+            xPixelSize : 16,
+            yPixelSize : 16,
+            displayName: 'Newton 970P'},
+
+        'Newton 971P' : {
+            shortName : 'newton971p',
+            xPixels : 1690,
+            yPixels : 400,
+            xPixelSize : 16,
+            yPixelSize : 16,
+            displayName: 'Newton 971P'},
 
         'iKon-M 934' : {
             shortName : 'iKonM934',

@@ -38,7 +38,7 @@
             #results th {
                 padding: 1px;
                 text-align: left;
-                background-color: darkblue;
+                background-color: #1c2674;
                 font-size: 9pt;
                 color: white;
             }
@@ -83,13 +83,15 @@
             }
 
             #directionDiv {
-                background : #ddd;
+                background : #1c2674;
+                color : white;
+                font-size : 120%;
                 margin : 5px;
                 padding : 12px;
             }
 
             .tip {
-                font-size: 80%;
+                font-size: 90%;
                 border-bottom : 1px solid black;
                 margin-bottom : 5px;
                 padding-bottom : 5px;
@@ -113,14 +115,21 @@
 
     <body>
         <div id = "directionDiv">
-            SPECTROGENIUS V0.1
+            Spectral Tabulator v0.1
         </div>
         <div id = 'guiDiv' class = 'guiContainer'>
             <div id = "wlConfigDiv" class = 'guiSubPanel'>
                 <div class = "tip">
-                 1.  Select a center wavelength, and if desired, a Raman excitation wavelength
+                 1.  Enter a center wavelength in nanometers
                 </div>
             </div>
+
+            <div id = "ramanConfigDiv" class = 'guiSubPanel'>
+                <div class = "tip">
+                 1b. (Optional) Ener a Raman excitation wavelength in nanometers
+                </div>
+            </div>
+
             <div id = "specrometerConfigDiv" class = 'guiSubPanel'>
                 <div class = "tip">
                     2.  Select one or more spectrometers
@@ -138,7 +147,7 @@
             </div>
             <div id = "effConfigDiv" class = 'guiSubPanel'>
                 <div class = "tip">
-                    5.  Enter one or more wavelengths (separated by commas) at which to calculate grating efficiency
+                    5.  Enter one or more wavelengths (in nm, separated by commas) at which to calculate grating efficiency
                 </div>
             </div>
         </div>
