@@ -1,6 +1,7 @@
 
-// create a chip type class to represent a particular type / geometry / AR coating
-// a chip type needs to have a Eff profile, and maybe some other stuff later
+// this awful file will take the output of gratingProcessor.ipynb (which parses a text file containing grating data)
+// and parse the json in that file, create objects corresponding to each grating, capable of interpolating efficiency data
+
 function grating(paramObj){
 
     var self = this;
@@ -158,14 +159,17 @@ function createGraph(ruleRange, targetSelector){
         .classed('axisText', true)
 }
 
-var ruleRanges = [[50,140], [150,160], [300,300], [1200,1400]];
+var ruleRanges = [[50,140], [150,160], [300,300], [400,400], [1200,1200], [1400,1400], [1600,1700], [2400,2400]];
 ruleRanges.forEach(function(r){createGraph(r, '#graphs')});
 
 // print all gratings without data for debug purposes
 console.log('The Following Gratings Require Data')
 var hasData = Object.keys(ge);
+var gratingCounter = 0;
 Object.keys(lookupTable).forEach(function(k){
     if (hasData.indexOf(k) == -1){
-        console.log(k)
+        console.log(k);
+        gratingCounter += 1;
     }
 })
+console.log(`${gratingCounter} gratings need data`)
