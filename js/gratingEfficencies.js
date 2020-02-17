@@ -158,5 +158,14 @@ function createGraph(ruleRange, targetSelector){
         .classed('axisText', true)
 }
 
-var ruleRanges = [[50,140], [150,150], [300,300], [1200,1400]];
+var ruleRanges = [[50,140], [150,160], [300,300], [1200,1400]];
 ruleRanges.forEach(function(r){createGraph(r, '#graphs')});
+
+// print all gratings without data for debug purposes
+console.log('The Following Gratings Require Data')
+var hasData = Object.keys(ge);
+Object.keys(lookupTable).forEach(function(k){
+    if (hasData.indexOf(k) == -1){
+        console.log(k)
+    }
+})
