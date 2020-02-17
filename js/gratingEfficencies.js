@@ -115,7 +115,7 @@ function createGraph(ruleRange, targetSelector){
             .curve(d3.curveCatmullRom)
             .x(d=>xScale(d.x))
             .y(d=>yScale(d.y))        
-        thisGraph
+        var newPath = thisGraph
             .append('path')
             .attr('d', newLine(g['data']))
             .attr('fill','none')
@@ -133,6 +133,18 @@ function createGraph(ruleRange, targetSelector){
                     createOrUpdateTable();
                 }
             })
+            
+            newPath.on('mouseover', function(){
+                    var nearestTooltip = d3.select(this.parentNode).select('.traceIdentifier');
+                    var newText = lookupTable[g['partNumber']];
+                    nearestTooltip.html(newText);
+            })
+
+            newPath.on('mouseout', function(){
+                var nearestTooltip = d3.select(this.parentNode).select('.traceIdentifier');
+                var newText = lookupTable[g['partNumber']];
+                nearestTooltip.html('');
+        })
     })
 
     // add axes
@@ -157,6 +169,12 @@ function createGraph(ruleRange, targetSelector){
         .attr('transform',`translate(${graphWidth/2},${graphHeight - graphMargin / 6}), rotate(0)`)
         .attr('text-anchor','middle')
         .classed('axisText', true)
+
+    // add grating identifier
+    thisGraph.append('text')
+        .classed('traceIdentifier', true)
+        .attr('transform', `translate(${graphMargin * 1.1}, ${graphMargin * 0.7})`)
+        .text('')
 }
 
 var ruleRanges = [[50,140], [150,160], [300,300], [400,400], [1200,1200], [1400,1400], [1600,1700], [2400,2400]];
