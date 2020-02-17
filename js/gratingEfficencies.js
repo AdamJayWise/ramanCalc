@@ -177,7 +177,7 @@ function createGraph(ruleRange, targetSelector){
         .text('')
 }
 
-var ruleRanges = [[80,140], [150,160], [300,300], [400,400], [800,1000], [1200,1210], [1400,1400], [1600,1700], [1800,1800], [2400,2400]];
+var ruleRanges = [[80,140], [150,160], [300,300], [400,400], [500,600], [800,1000], [1200,1210], [1400,1400], [1600,1700], [1800,1800], [2400,2400]];
 ruleRanges.forEach(function(r){createGraph(r, '#graphs')});
 
 // print all gratings without data for debug purposes
