@@ -34,6 +34,7 @@ var app = { 'centerWavelength' : 500, // center wavelength in nm
             'activeSpect' : [],
             'activeCameras' : [],
             'activeWavelengths' : false,
+            'slitWidth' : 10, // slit width in microns
     };
 
 
@@ -130,31 +131,35 @@ Object.keys(gratings).forEach(function(key){
     gratingSelect.append('option').property('value', key).html(key)
 })
 
-spectrometers = { 'Kymera 193' : {'psf' : 60,
+spectrometers = { 'Kymera 193' : {//'psf' : 60,
+                                'psf' : 59.16,
                                  'dev' : -14,
                                 'fpt' : 4.56,
                                 'fl' : 193,
                                 'displayName' : 'Kymera 193',
                                 },
-                'Kymera 328' : {'psf' : 40,
+                'Kymera 328' : { //'psf' : 40,
+                                'psf' : 38.73,
                                 'dev' : -11.8,
                                'fpt' : 4,
                                'fl' : 328,
                                'displayName' : 'Kymera 328'
                                }, 
 
-                'Shamrock 500' : {'psf' : 40,
-                               'dev' : -11.5,
-                              'fpt' : 3.752,
-                              'fl' : 500,
-                              'displayName' : 'Shamrock 500'
+                'Shamrock 500' : {//'psf' : 40,
+                            'psf' : 38.73,
+                            'dev' : -11.5,
+                            'fpt' : 3.752,
+                            'fl' : 500,
+                            'displayName' : 'Shamrock 500'
                               }, 
                 
-            'Shamrock 750' : {'psf' : 40,
-                              'dev' : -7.39,
-                             'fpt' : 1.083,
-                             'fl' : 750,
-                             'displayName' : 'Shamrock 750'
+            'Shamrock 750' : {//'psf' : 40,
+                            'psf' : 38.73,
+                            'dev' : -7.39,
+                            'fpt' : 1.083,
+                            'fl' : 750,
+                            'displayName' : 'Shamrock 750'
                              }, 
                 };
 
@@ -227,6 +232,23 @@ var effInput = effInputDiv.append('input').on('change', function(d){
     console.log(app['activeWavelengths'])
     createOrUpdateTable();
 })
+
+// add a slit width input
+var slitInputDiv = d3.select('#slitDiv').append('div')
+var slitInput = slitInputDiv.append('input').property('value',10).on('change', function(d){
+    app['slitWidth'] = 10;
+    var rawInput = slitInput.property('value');
+    if(!isNaN(Number(rawInput)) & (Number(rawInput) > 10) & (Number(rawInput) < 2000) ){
+        app['slitWidth'] = [Number(rawInput)];
+    }
+
+    else {
+        slitInput.property('value',10)
+    }
+    console.log(app['slitWidth'])
+    createOrUpdateTable();
+})
+
 
 // lets redo the table code to work better here, cribbing from the last one as needed
 
@@ -313,9 +335,9 @@ function createOrUpdateTable(){
                                                 cameraDefs[cam]['xPixels'],
                                                 cameraDefs[cam]['xPixelSize']  );
 
-                var iStarFudgeFactor = 1;
+                var intensifierPsf = 0;
                 if (cameraDefs[cam]['isIntensified']){
-                    iStarFudgeFactor = 1.3;
+                    intensifierPsf = 25;
                 }
 
                 var newCombo = {
@@ -330,7 +352,7 @@ function createOrUpdateTable(){
                     //'Center Wavelength' : app['centerWavelength'],
                     'End Wavelength' : r(wlObj['endWavelength'], 2) || '-',
                     'bandWidth' : r(wlObj['bandWidth'], 2) || '-',
-                    'resolution' : r(iStarFudgeFactor * pixFactor * wlObj['linearDispersion'] * (spectrometers[spec]['psf']/1000), 3) || '-',
+                    'resolution' : r(wlObj['linearDispersion'] * ( Math.sqrt(app['slitWidth']**2 + intensifierPsf**2 + (pixFactor * spectrometers[spec]['psf'])**2)/1000), 3) || '-',
 
                 }
 
