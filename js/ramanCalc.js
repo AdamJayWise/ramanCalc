@@ -312,6 +312,12 @@ function createOrUpdateTable(){
                                                 spectrometers[spec]['fpt'],
                                                 cameraDefs[cam]['xPixels'],
                                                 cameraDefs[cam]['xPixelSize']  );
+
+                var iStarFudgeFactor = 1;
+                if (cameraDefs[cam]['isIntensified']){
+                    iStarFudgeFactor = 1.3;
+                }
+
                 var newCombo = {
                     'spectrometer' : spectrometers[spec]['displayName'],
                     'camera' : cam,
@@ -324,7 +330,7 @@ function createOrUpdateTable(){
                     //'Center Wavelength' : app['centerWavelength'],
                     'End Wavelength' : r(wlObj['endWavelength'], 2) || '-',
                     'bandWidth' : r(wlObj['bandWidth'], 2) || '-',
-                    'resolution' : r(pixFactor * wlObj['linearDispersion'] * (spectrometers[spec]['psf']/1000), 3) || '-',
+                    'resolution' : r(iStarFudgeFactor * pixFactor * wlObj['linearDispersion'] * (spectrometers[spec]['psf']/1000), 3) || '-',
 
                 }
 

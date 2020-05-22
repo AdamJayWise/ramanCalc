@@ -214,5 +214,56 @@ var cameraDefs = {
             frameRateHzSlow: 0.03 ,
            containerDivID : 'subContainer',
            model : models['BEX2-DD'],
-           displayName: 'iKon-M 934 BEX2-DD'}
+           displayName: 'iKon-M 934 BEX2-DD'},
+
+           'iStar CCD 312' : {
+            shortName : 'iStar312',
+            xPixels : 512,
+            yPixels : 512,
+            xPixelSize : 24,
+            yPixelSize : 24,
+            isIntensified : true,
+            containerDivID : 'subContainer',
+            displayName: 'iStar CCD 312'},
+
+            'iStar CCD 320' : {
+                shortName : 'iStar320',
+                xPixels : 1024,
+                yPixels : 256,
+                xPixelSize : 26,
+                yPixelSize : 26,
+                isIntensified : true,
+                containerDivID : 'subContainer',
+                displayName: 'iStar CCD 320'},
+
+            'iStar CCD 334' : {
+                shortName : 'iStar334',
+                xPixels : 1024,
+                yPixels : 1024,
+                xPixelSize : 13,
+                yPixelSize : 13,
+                isIntensified : true,
+                containerDivID : 'subContainer',
+                displayName: 'iStar CCD 334'},
+
+            'iStar CCD 340' : {
+                shortName : 'iStar340',
+                xPixels : 2048,
+                yPixels : 512,
+                xPixelSize : 13.5,
+                yPixelSize : 13.5,
+                isIntensified : true,
+                containerDivID : 'subContainer',
+                displayName: 'iStar CCD 340'},
+
+            'iStar sCMOS' : {
+                shortName : 'iStarscmos',
+                xPixels : 2560 / 2,
+                yPixels : 2160 / 2,
+                xPixelSize : 6.5 * 2,
+                yPixelSize : 6.5 * 2,
+                isIntensified : true,
+                containerDivID : 'subContainer',
+                displayName: 'iStar sCMOS'},
+
 }
