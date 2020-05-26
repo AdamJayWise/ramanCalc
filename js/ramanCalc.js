@@ -251,16 +251,16 @@ var slitInput = slitInputDiv.append('input').property('value',10).on('change', f
 
 
 // lets redo the table code to work better here, cribbing from the last one as needed
-
 function calcTilt(cwl, rule, dev){
     sinTilt = 10**-6 * cwl * rule / (-2 * Math.cos( (2 * Math.PI) * dev / 360  ))
     return 360 * Math.asin(sinTilt) / (2 * Math.PI)
 }
 
 
+// primary function to build the table that displays results
 function createOrUpdateTable(){
     d3.selectAll('table').remove();
-    var resultTable = d3.select('body').append('table').attr('id','results');
+    var resultTable = d3.select('#results').append('table').attr('id','results');
     var headerRow = resultTable.append('tr');
     var headerLabels = ['Spectrometer',
                         'Camera',
@@ -382,14 +382,13 @@ function createOrUpdateTable(){
         });
     });
 
-
+    // sort table by currently-active parameter
     combinations.sort( function(a,b){
         if(Number(a[app.currentParam]) > Number(b[app.currentParam])){
             return -1 * app.ascending
         }
         else {return app.ascending}
     });
-
 
     //append a row corresponding to each combination
     combinations.forEach(function(combo){
@@ -408,7 +407,7 @@ function createOrUpdateTable(){
 createOrUpdateTable();
 
 function calcWavelengthRange(cwl, rule, dev, fl, tilt, fpt, xPixels, xPixelSize){
-    // calcualte the sensor size
+    // calculate the sensor size in mm, from pixel size in microns
     var sensorSize = xPixels * xPixelSize / 1000;
     // calculate the angle of the incident and diffracted rays relative to the grating normal
     var thetaInc = dev - tilt;

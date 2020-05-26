@@ -80,7 +80,7 @@ function rando(){
 
 
 function createGraph(ruleRange, targetSelector){
-    var graphDiv = d3.select(targetSelector).append('div')
+    var graphDiv = d3.select(targetSelector).append('div').classed('graphDiv', true)
     var textLabel = graphDiv
         .append('span')
 

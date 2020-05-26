@@ -55,10 +55,12 @@
             
             .guiSubPanel{
 
-                border : 1px solid black;
+                border : none;
+                box-shadow : 3px 3px 3px 3px #999; 
                 padding : 5px;
-                display : block;
+                display : inline-block;
                 margin : 5px;
+                
             }
 
             select {
@@ -81,12 +83,12 @@
                 padding : 2px;
             }
 
-            #directionDiv {
+            .directionDiv {
                 background : #1c2674;
                 color : white;
                 font-size : 120%;
                 margin : 5px;
-                padding : 12px;
+                padding : 3px;
             }
 
             .tip {
@@ -112,61 +114,106 @@
             .traceIdentifier {
                 font-style: italic;
             }
+
+
+            .rowContainer {
+                display : flex;
+                flex-direction : row;
+            }
+
+            input[type=range]{
+                display: none;
+            }
+
+            #gratingConfigDiv{
+                flex-grow : 1;
+            }
+
+            #effConfigDiv{
+                flex-grow : 1;  
+            }
+
+            #results {
+                margin: 10px 0 20px 0;
+            }
+
+            .graphDiv {
+                box-shadow : 4px 4px 4px gray;
+                margin : 1px 0 4px 0;
+                padding : 2px;
+            }
+
+            #gratingHeader {
+                font-size: 90%;
+            }
             
         </style>
     </head>
 
     <body>
-        <div id = "directionDiv">
-            Spectral Tabulator v0.1
+        <div class = "directionDiv">
+            Resolution Calculator v0.2
         </div>
         <div id = 'guiDiv' class = 'guiContainer'>
-            <div id = "wlConfigDiv" class = 'guiSubPanel'>
-                <div class = "tip">
-                 1.  Enter a center wavelength in nanometers
+
+            <div id = "container1" class = "rowContainer">
+                <div id = "wlConfigDiv" class = 'guiSubPanel'>
+                    <div class = "tip">
+                    Center Wavelength,  nm
+                    </div>
                 </div>
+
+                <div id = "slitDiv" class = 'guiSubPanel'>
+                    <div class = "tip">
+                        Slit size (in um)
+                    </div>
+                </div>
+
+                <div id = "ramanConfigDiv" class = 'guiSubPanel'>
+                    <div class = "tip">
+                    (Optional) Raman Excitation Wavelength, nm
+                    </div>
+                </div>
+
+                <div id = "effConfigDiv" class = 'guiSubPanel'>
+                    <div class = "tip">
+                        (Optional) Test Wavelengths, nm 
+                    </div>
+                </div>
+
+
             </div>
 
-            <div id = "ramanConfigDiv" class = 'guiSubPanel'>
-                <div class = "tip">
-                 1b. (Optional) Enter a Raman excitation wavelength in nanometers
-                </div>
-            </div>
+        <div id = "container2" class = "rowContainer">
 
             <div id = "specrometerConfigDiv" class = 'guiSubPanel'>
                 <div class = "tip">
-                    2.  Select one or more spectrometers
+                    Select Spectrometers
                 </div>
             </div>
+
             <div id = "gratingConfigDiv" class = 'guiSubPanel'>
                 <div class = "tip">
-                    3.  Select one or more gratings, or click a grating category below to expand a graph, and then click on a trace to add that grating
+                    Select Gratings
                 </div>
             </div>
             <div id = "cameraConfigDiv" class = 'guiSubPanel'>
                 <div class = "tip">
-                    4.  Select one or more cameras
+                    Select Cameras
                 </div>
             </div>
-            <div id = "effConfigDiv" class = 'guiSubPanel'>
-                <div class = "tip">
-                    5.  Enter one or more wavelengths (in nm, separated by commas) at which to calculate grating efficiency
-                </div>
-            </div>
+            
 
-            <div id = "slitDiv" class = 'guiSubPanel'>
-                <div class = "tip">
-                    6.  Enter a slit size (in um)
-                </div>
-            </div>
+
         </div>
-     
-            <div id = "graphs">
-                <div class = "tip">Grating Efficiency Graphs (click category to expand, click trace to add or remove)</div>   
-            </div>
+    </div>
 
-        <div class = "results">
-            Results
+
+        <div id = "results">
+        </div>
+
+        <div class = "directionDiv" id = "gratingHeader">Grating Efficiency Graphs </div>  
+        <div id = "graphs">
         </div>
     </body>
 
