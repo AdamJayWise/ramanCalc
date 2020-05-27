@@ -1,5 +1,7 @@
 console.log('ramanCalc.js - 1/27/2020 Adam Wise');
 
+debug = 1;
+
 // ok now that i've refeshed myself on the math for dispersion, bandwidth, etc
 
 // it would be cool to make an interactive bandpass visualization
@@ -131,37 +133,7 @@ Object.keys(gratings).forEach(function(key){
     gratingSelect.append('option').property('value', key).html(key)
 })
 
-spectrometers = { 'Kymera 193' : {//'psf' : 60,
-                                'psf' : 59.16,
-                                 'dev' : -14,
-                                'fpt' : 4.56,
-                                'fl' : 193,
-                                'displayName' : 'Kymera 193',
-                                },
-                'Kymera 328' : { //'psf' : 40,
-                                'psf' : 38.73,
-                                'dev' : -11.8,
-                               'fpt' : 4,
-                               'fl' : 328,
-                               'displayName' : 'Kymera 328'
-                               }, 
 
-                'Shamrock 500' : {//'psf' : 40,
-                            'psf' : 38.73,
-                            'dev' : -11.5,
-                            'fpt' : 3.752,
-                            'fl' : 500,
-                            'displayName' : 'Shamrock 500'
-                              }, 
-                
-            'Shamrock 750' : {//'psf' : 40,
-                            'psf' : 38.73,
-                            'dev' : -7.39,
-                            'fpt' : 1.083,
-                            'fl' : 750,
-                            'displayName' : 'Shamrock 750'
-                             }, 
-                };
 
 // add spectrometer selector
 var spectDiv = d3.select('#specrometerConfigDiv').append('div');
@@ -211,7 +183,6 @@ var camSelect = camDiv.append('select').attr('multiple','true');;
     createOrUpdateTable();  
 });
 var camKeys = Object.keys(cameraDefs);
-camKeys.sort();
 camKeys.forEach(function(key){
     camSelect.append('option').property('value', key).text(key)
 })
@@ -340,6 +311,12 @@ function createOrUpdateTable(){
                     intensifierPsf = 25;
                 }
 
+                var combinedPSF = ( Math.sqrt(app['slitWidth']**2 + intensifierPsf**2 + (pixFactor * spectrometers[spec]['psf'])**2)/1000) ;
+                
+                if (debug){
+                    console.log('combined PSF: ',combinedPSF)
+                }
+
                 var newCombo = {
                     'spectrometer' : spectrometers[spec]['displayName'],
                     'camera' : cam,
@@ -352,7 +329,7 @@ function createOrUpdateTable(){
                     //'Center Wavelength' : app['centerWavelength'],
                     'End Wavelength' : r(wlObj['endWavelength'], 2) || '-',
                     'bandWidth' : r(wlObj['bandWidth'], 2) || '-',
-                    'resolution' : r(wlObj['linearDispersion'] * ( Math.sqrt(app['slitWidth']**2 + intensifierPsf**2 + (pixFactor * spectrometers[spec]['psf'])**2)/1000), 3) || '-',
+                    'resolution' : r(wlObj['linearDispersion'] * combinedPSF, 2) || '-',
 
                 }
 
@@ -407,7 +384,7 @@ function createOrUpdateTable(){
 createOrUpdateTable();
 
 function calcWavelengthRange(cwl, rule, dev, fl, tilt, fpt, xPixels, xPixelSize){
-    // calculate the sensor size in mm, from pixel size in microns
+    // first calculate the sensor size in mm, from pixel size in microns
     var sensorSize = xPixels * xPixelSize / 1000;
     // calculate the angle of the incident and diffracted rays relative to the grating normal
     var thetaInc = dev - tilt;
@@ -416,8 +393,21 @@ function calcWavelengthRange(cwl, rule, dev, fl, tilt, fpt, xPixels, xPixelSize)
     // calculate the difference in angle of the rays hitting the edge of the camera chip relative to the center wavelength
     var thetaDiff = Math.atan( sensorSize/2 / fl); // for whatever reason the original andor #s don't inlcude fpt here
     var startWavelength  = 10**6 * (1/rule) * ( Math.sin(rad(thetaInc)) - Math.sin(rad(thetaRefr) + thetaDiff) ) ;
+    
+
+    // calculate the startWavelength + 1 pixel
+    var thetaDiffPlusOne = Math.atan( (sensorSize/2 - xPixelSize/1000) / fl);
+    var startWavelengthPlusOne = 10**6 * (1/rule) * ( Math.sin(rad(thetaInc)) - Math.sin(rad(thetaRefr) + thetaDiffPlusOne) ) ;
+    console.log( (startWavelength-startWavelengthPlusOne) / (xPixelSize/1000) )
+
     var endWavelength = 10**6 * (1/rule) * ( Math.sin(rad(thetaInc)) - Math.sin(rad(thetaRefr) - thetaDiff) ) ;
-    var bandWidth = (endWavelength - startWavelength) ;
+    
+    // calculate the startWavelength + 1 pixel
+    var thetaDiffPlusOne = Math.atan( (sensorSize/2 - xPixelSize/1000) / fl);
+    var endWavelengthMinusOne = 10**6 * (1/rule) * ( Math.sin(rad(thetaInc)) - Math.sin(rad(thetaRefr) - thetaDiffPlusOne) ) ;
+    console.log( (endWavelength - endWavelengthMinusOne) / (xPixelSize/1000) )
+    
+    var bandWidth = (endWavelength - startWavelength) * tiltFactor ;
     var linearDispersion = bandWidth / sensorSize;
     return {'startWavelength' : startWavelength,
             'endWavelength' : endWavelength,
@@ -425,3 +415,30 @@ function calcWavelengthRange(cwl, rule, dev, fl, tilt, fpt, xPixels, xPixelSize)
             'linearDispersion' : linearDispersion,
             };
 }
+
+// add a test suite here
+
+
+var testEnvObj = { 'centerWavelength' : 500, // center wavelength in nm
+                    'startWavelength' : 0, // start wavelength of sensor bandwidth in nm
+                    'endWavelength' : 0, // end wavelength of sensor bandwidth in nm
+                    'gratingTilt' : 0, // grating tilt in degrees
+                    'deviationAngle' : -14, // deviation angle of spectrometer in degrees
+                    'grooveDensity' : 150, // groove density of grating in lines / mm
+                    'bandWidth' : 0, // sensor bandwidth in nm
+                    'focalLength': 193, // spectrometer focal length in mm
+                    'sensorSize' : 25.6, // sensor width in mm
+                    'focalPlaneTilt' : 4.56, // camera focal plane tilt in degrees
+                    'ascending' : 1,
+                    'ramanExcWavelength' : 0,
+                    'activeGratings' : [],
+                    'activeSpect' : [],
+                    'activeCameras' : [],
+                    'activeWavelengths' : false,
+                    'slitWidth' : 10, // slit width in microns
+                    };
+                    
+    var tiltTestVal = calculateTilt(testEnvObj);
+
+    console.log('testing tilt calculation')
+    console.assert( Math.abs(tiltTestVal - -2.21491) < 0.01 )

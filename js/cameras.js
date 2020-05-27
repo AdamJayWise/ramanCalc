@@ -1,12 +1,14 @@
 var models = {};
+
 var cameraDefs = {
+
     'Zyla 5.5' : {
-        shortName : 'Zyla55',
-        xPixels : 2560,
-        yPixels : 2160,
-        xPixelSize : 6.5,
-        yPixelSize : 6.5,
-        displayName: 'Zyla 5.5 10-Tap'},
+        shortName : 'Zyla55', // short name, not currently used
+        xPixels : 2560, // number of pixels on chip in x direction
+        yPixels : 2160, // number of pixels on chip in y direction
+        xPixelSize : 6.5, // x pixel size in microns
+        yPixelSize : 6.5, // y pixel size in microns
+        displayName: 'Zyla 5.5 10-Tap / USB'}, // full name to display in gui
 
         'Neo 5.5' : {
             shortName : 'neo55',
@@ -39,7 +41,7 @@ var cameraDefs = {
         yPixels : 2048,
         xPixelSize : 6.5,
         yPixelSize : 6.5,
-        displayName: 'Zyla 4.2+ 10-Tap'},
+        displayName: 'Zyla 4.2+ 10-Tap / USB'},
 
         'Balor' : {
             shortName : 'Balor',
@@ -58,14 +60,38 @@ var cameraDefs = {
         yPixelSize : 11,
         displayName: 'Sona 4.2B-11'},
 
+            
+        'Sona 2.0B-11' : {
+            shortName : 'Sona42b11',
+            xPixels : 1400,
+            yPixels : 1400,
+            xPixelSize : 11,
+            yPixelSize : 11,
+            displayName: 'Sona 2.0B-11'},
+
         'Sona 4.2B-6' : {
             shortName : 'Sona42b6',
             xPixels : 2048,
             yPixels : 2048,
-            xPixelSize : 6,
-            yPixelSize : 6,
+            xPixelSize : 6.5,
+            yPixelSize : 6.5,
             displayName: 'Sona 4.2B-6'},
 
+        'Marana 4.2B-11' : {
+            shortName : 'Marana42b11',
+            xPixels : 2048,
+            yPixels : 2048,
+            xPixelSize : 11,
+            yPixelSize : 11,
+            displayName: 'Marana 4.2B-11'},
+        
+        'Marana 4.2B-6' : {
+            shortName : 'Marana42b6',
+            xPixels : 2048,
+            yPixels : 2048,
+            xPixelSize : 6.5,
+            yPixelSize : 6.5,
+            displayName: 'Marana 4.2B-6'},
 
     'Idus 401' : {
         shortName : 'idus401',
@@ -267,3 +293,27 @@ var cameraDefs = {
                 displayName: 'iStar sCMOS'},
 
 }
+
+function sortObj(o){
+    var keys = Object.keys(o).sort(function(a,b){
+        if (a.toUpperCase() > b.toUpperCase()){
+            return 1
+        }
+        if (a.toUpperCase() < b.toUpperCase()){
+            return -1
+        }
+        if (a.toUpperCase() == b.toUpperCase()){
+            return 0
+        }
+    });
+
+    var output = {};
+    keys.forEach(function(k){
+        output[k] = o[k];
+    })
+
+    return output;
+}
+
+console.log('sorting')
+cameraDefs = sortObj(cameraDefs);
