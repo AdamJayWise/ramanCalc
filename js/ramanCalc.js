@@ -136,7 +136,7 @@ Object.keys(gratings).forEach(function(key){
 
 
 // add spectrometer selector
-var spectDiv = d3.select('#specrometerConfigDiv').append('div');
+var spectDiv = d3.select('#spectrometerConfigDiv').append('div');
 var spectSelect = spectDiv.append('select').attr('multiple','true');;
  spectSelect.on("change",function(d){ 
     app['activeSpect'] = [];
@@ -235,6 +235,7 @@ function createOrUpdateTable(){
     var headerRow = resultTable.append('tr');
     var headerLabels = ['Spectrometer',
                         'Camera',
+                        'Pixel Size, um',
                          'Rule, l/mm',
                          'Blaze',
                          'Grating Angle',
@@ -282,7 +283,8 @@ function createOrUpdateTable(){
                 'Start, cm<sup>-1</sup>' : 'ramanStart',
                 'End, cm<sup>-1</sup>' : 'ramanEnd',
                 'Bandwidth, cm<sup>-1</sup>' : 'ramanBandwidth', 
-                'Resolution, cm<sup>-1</sup>' : 'ramanRes'
+                'Resolution, cm<sup>-1</sup>' : 'ramanRes',
+                'Pixel Size, um' : 'pixelSize'
     };
 
     // make and populate a list of objects corresponding to spectrometer / gratings pairs
@@ -320,6 +322,7 @@ function createOrUpdateTable(){
                 var newCombo = {
                     'spectrometer' : spectrometers[spec]['displayName'],
                     'camera' : cam,
+                    'pixelSize' : cameraDefs[cam]['xPixelSize'],
                     //'focal length' : spectrometers[spec]['fl'],
                     'rule' : gratings[grat]['rule'],
                     'blaze' : gratings[grat]['Blaze'],

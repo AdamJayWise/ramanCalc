@@ -1,7 +1,7 @@
 var spectrometers = { 
     
                 'Kymera 193' : {//'psf' : 60, // original psf from Tristan's script, in um
-                                'psf' : 59.16, // point spread function after removal of 10um slit 
+                                'psf' : 59.16 * 0.98989, // point spread function after removal of 10um slit 
                                  'dev' : -14, // deviation in degrees
                                 'fpt' : 4.56, // focal plane tilt, in degrees
                                 'fl' : 193, // focal length, in mm
@@ -9,12 +9,20 @@ var spectrometers = {
                                 },
 
                 'Kymera 328' : { //'psf' : 40,
-                                'psf' : 38.73,
+                                'psf' : 38.73 * 1.126,
                                 'dev' : -10.875,
                                'fpt' : 5,
                                'fl' : 328,
                                'displayName' : 'Kymera 328'
                                }, 
+
+                'Kymera 328 with TruRes' : { //'psf' : 40,
+                               'psf' : 38.73 * 0.7723,
+                               'dev' : -10.875,
+                              'fpt' : 5,
+                              'fl' : 328,
+                              'displayName' : 'Kymera 328 with TruRes'
+                              }, 
 
                 'Shamrock 500' : {//'psf' : 40,
                             'psf' : 38.73,

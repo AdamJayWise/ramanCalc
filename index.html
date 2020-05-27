@@ -93,9 +93,11 @@
 
             .tip {
                 font-size: 90%;
-                border-bottom : 1px solid black;
                 margin-bottom : 5px;
                 padding : 3px 5px 5px 5px;
+                background : #1c2674;
+                opacity : 0.8;
+                color: white;
 
             }
 
@@ -123,6 +125,10 @@
 
             input[type=range]{
                 display: none;
+            }
+
+            #spectrometerConfigDiv{
+                flex-grow : 1;
             }
 
             #gratingConfigDiv{
@@ -186,7 +192,7 @@
 
         <div id = "container2" class = "rowContainer">
 
-            <div id = "specrometerConfigDiv" class = 'guiSubPanel'>
+            <div id = "spectrometerConfigDiv" class = 'guiSubPanel'>
                 <div class = "tip">
                     Select Spectrometers
                 </div>
