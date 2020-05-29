@@ -71,6 +71,34 @@ function calcPixFactor(pixwidth){
     if (pixwidth>50) return 1.55
 }
 
+// a function to append an inline div that pops up a new closeable div with a tooltip inside
+function addToolTip(targetSelection, message){
+    var tipButton = targetSelection.append('div');
+    tipButton.classed('tipButton', true);    
+    tipButton.text('?');
+
+    tipButton.on('click', function(){
+
+        var screenDiv = d3.select('body').append('div')
+        screenDiv.classed('screen', true);
+        screenDiv.on('click', function(){
+            screenDiv.remove();
+            messageDiv.remove();
+        })
+        
+        var messageDiv = d3.select('body').append('div').classed('messageDiv', true);
+        messageDiv.text(message);
+        messageDiv.on('click', function(){
+            screenDiv.remove();
+            messageDiv.remove();
+        })
+        
+    })
+
+    return tipButton;
+
+}
+
 // rounding function with specific number of decimal places d
 function r(n,d){
     return Math.round(n*10**d)/10**d;
@@ -199,10 +227,13 @@ var effInput = effInputDiv.append('input').on('change', function(d){
     else {
         app['activeWavelengths'] = rawInput.split(',').map(a=>Number(a.trim()));
     }
-
     console.log(app['activeWavelengths'])
     createOrUpdateTable();
 })
+
+var effTipMessage = "Enter any number of wavelengths in nanometers at which to calculate grating efficiency.  For multiple wavelengths, seperate values with commas.  A new result column will be created for each wavelength.  Efficiency data is not available for all gratings."
+
+var effToolTip = addToolTip(d3.select('#effTip'), effTipMessage);
 
 // add a slit width input
 var slitInputDiv = d3.select('#slitDiv').append('div')
@@ -445,3 +476,4 @@ var testEnvObj = { 'centerWavelength' : 500, // center wavelength in nm
 
     console.log('testing tilt calculation')
     console.assert( Math.abs(tiltTestVal - -2.21491) < 0.01 )
+

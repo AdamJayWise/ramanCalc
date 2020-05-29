@@ -1,4 +1,16 @@
 var spectrometers = { 
+
+              'Shamrock 163' : {//'psf' : 60, // original psf from Tristan's script, in um
+                              'psf' : 59.16, // point spread function after removal of 10um slit 
+                              'dev' : -13.9, // deviation in degrees
+                              'fpt' : 4, // focal plane tilt, in degrees
+                              'fl' : 163, // focal length, in mm
+                              'gratingSizeX' : '45',
+                              'gratingSizeY' : '45',
+                              'f#' : 3.6,
+                              'displayName' : 'Shamrock 163', // what to call it in the GUI,
+                              },
+
     
                 'Kymera 193' : {//'psf' : 60, // original psf from Tristan's script, in um
                                 'psf' : 59.16 * 0.98989, // point spread function after removal of 10um slit 

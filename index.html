@@ -135,13 +135,16 @@
                 flex-grow : 1;
             }
 
+            #slitDiv {
+                flex-grow : 0.5
+            }
             
             #cameraConfigDiv{
                 flex-grow : 1;
             }
 
             #effConfigDiv{
-                flex-grow : 1;  
+                flex-grow : 1.5;  
             }
 
             #results {
@@ -158,6 +161,45 @@
                 font-size: 90%;
             }
             
+            .tipButton {
+                display : inline-block;
+                position : relative;
+                top : 2px;
+                left : 5px;
+                background-color : rgb(48, 58, 136);
+                border-radius : 12.5px;
+                border : 1px solid white;
+                width : 20px;
+                height : 20px;
+                text-align : center;
+                line-height : 20px;
+                color : white;
+                font-size : 18px;
+                margin : -5px 0 0 0;
+                box-shadow : 1px 1px gray;
+            }
+
+            .messageDiv {
+                position : absolute;
+                width : 300px;
+                min-height: 150px;
+                top : 100;
+                left : 400;
+                background-color : white;
+                border : 3px solid rgb(48, 58, 136);
+                padding : 10px;
+            }
+
+            .screen {
+                opacity : 0.5;
+                background-color : white;
+                width : 100%;
+                height : 100%;
+                position : absolute;
+                top : 0px;
+                left : 0px;
+            }
+
         </style>
     </head>
 
@@ -187,7 +229,7 @@
                 </div>
 
                 <div id = "effConfigDiv" class = 'guiSubPanel'>
-                    <div class = "tip">
+                    <div class = "tip" id = "effTip">
                         (Optional) Test Wavelengths, nm 
                     </div>
                 </div>

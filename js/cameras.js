@@ -43,6 +43,7 @@ var cameraDefs = {
         yPixelSize : 6.5,
         displayName: 'Zyla 4.2+ 10-Tap / USB'},
 
+        /* Balor should probably not be offered on a spectrometer
         'Balor' : {
             shortName : 'Balor',
             xPixels : 4128,
@@ -50,7 +51,7 @@ var cameraDefs = {
             xPixelSize : 12,
             yPixelSize : 12,
             displayName: 'Balor'},
-
+        */
     
         'Sona 4.2B-11' : {
         shortName : 'Sona42b11',
