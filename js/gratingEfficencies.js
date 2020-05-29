@@ -115,6 +115,7 @@ function createGraph(ruleRange, targetSelector){
             .curve(d3.curveCatmullRom)
             .x(d=>xScale(d.x))
             .y(d=>yScale(d.y))        
+
         var newPath = thisGraph
             .append('path')
             .attr('d', newLine(g['data']))
@@ -156,6 +157,28 @@ function createGraph(ruleRange, targetSelector){
     var yAxis = d3.axisLeft(yScale);
     xAxis(xAxisG);
     yAxis(yAxisG);
+
+    // add grid
+    yAxis.scale().ticks().forEach( function(yVal){
+        var l = yAxisG.append('line')
+            .attr('x1', xScale(90))
+            .attr('x2', xScale(2090))
+            .attr('y1', yScale(yVal) + 0.5)
+            .attr('y2', yScale(yVal) + 0.5)
+            .attr('stroke', 'black')
+            .attr('stroke-opacity', 0.1)
+    })
+
+    xAxis.scale().ticks().forEach( function(xVal){
+        var l = yAxisG.append('line')
+            .attr('x1', xScale(xVal))
+            .attr('x2', xScale(xVal))
+            .attr('y1', yScale(0))
+            .attr('y2', yScale(100))
+            .attr('stroke', 'black')
+            .attr('stroke-opacity', 0.1)
+    })
+
 
     // Add axis labels
     thisGraph.append('text')

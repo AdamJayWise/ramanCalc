@@ -450,6 +450,10 @@ function calcWavelengthRange(cwl, rule, dev, fl, tilt, fpt, xPixels, xPixelSize)
             };
 }
 
+// grating header tooltip
+var gratingHeaderMessage = "Click on a rule range below to open a graph showing available efficiency data.  Click a trace to add/remove a grating to the results table.  Efficiency data is for unpolarized light, or average of S&P polarization as available.  Check with Andor staff to confirm availability of non-standard gratings."
+addToolTip(d3.select('#gratingHeader'), gratingHeaderMessage);
+
 // add a test suite here
 
 
