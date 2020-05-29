@@ -37,6 +37,7 @@ var app = { 'centerWavelength' : 500, // center wavelength in nm
             'activeCameras' : [],
             'activeWavelengths' : false,
             'slitWidth' : 10, // slit width in microns
+            'showRelativeThroughput' : false, // display relative system throughput calculations    
     };
 
 
@@ -251,6 +252,18 @@ var slitInput = slitInputDiv.append('input').property('value',10).on('change', f
     createOrUpdateTable();
 })
 
+// add callback for throughput checkbox
+d3.select('#throughputCheckBox')
+    .append('input')
+    .property('type','checkbox')
+    .style('display', 'inline')
+    .on('change', function(){
+        app['showRelativeThroughput'] = !app['showRelativeThroughput'];
+        createOrUpdateTable();
+})
+
+addToolTip(d3.select('#throughputCheckBox'), 'Unitless measure of light throughput through system, considering F/#.')
+
 
 // lets redo the table code to work better here, cribbing from the last one as needed
 function calcTilt(cwl, rule, dev){
@@ -286,6 +299,11 @@ function createOrUpdateTable(){
         var wavelengthHeaderLabels = app['activeWavelengths'].map(a=>`&eta;@${a}nm`);
         console.log(wavelengthHeaderLabels)
         headerLabels = headerLabels.concat(wavelengthHeaderLabels)
+    }
+
+    if (app['showRelativeThroughput']){
+        var tpLabels = ['Relative Throughput'];
+        headerLabels = headerLabels.concat(tpLabels)
     }
 
     headerLabels.forEach(function(label){
@@ -386,6 +404,16 @@ function createOrUpdateTable(){
                             newCombo[`eff@${l}`] = 0;
                         }
                     })
+                }
+
+                if (app['showRelativeThroughput']){
+                    headerDict['Relative Throughput'] = 'throughput';
+                    var effectiveGratingAngle = spectrometers[spec]['dev'] + gratTilt;
+                    if (debug){
+                        console.log('effective grating angle is ', effectiveGratingAngle)
+                    }
+                    var effectiveFnumberFactor = Math.cos(rad(effectiveGratingAngle));
+                    newCombo['throughput'] = r(effectiveFnumberFactor / (spectrometers[spec]['f#'] ** 2) / 0.077,2) 
                 }
 
                 combinations.push(newCombo)

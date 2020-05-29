@@ -64,7 +64,7 @@
             }
 
             select {
-                width : 95%;
+                width : 100%;
                 border : none;
 
             }
@@ -81,6 +81,7 @@
                 border : none;
                 background : #eee;
                 padding : 2px;
+                width : 100%;
             }
 
             .directionDiv {
@@ -127,6 +128,13 @@
                 display: none;
             }
 
+            input[type=checkbox]{
+                display : inline-block;
+                width : 20px;
+                margin-right : -5px;
+                margin-left : 0px;
+            }
+
             #spectrometerConfigDiv{
                 flex-grow : 1;
             }
@@ -165,16 +173,16 @@
                 display : inline-block;
                 position : relative;
                 top : 2px;
-                left : 5px;
+                left : 4px;
                 background-color : rgb(48, 58, 136);
                 border-radius : 12.5px;
                 border : 1px solid white;
-                width : 20px;
-                height : 20px;
+                width : 18px;
+                height : 18px;
                 text-align : center;
-                line-height : 20px;
+                line-height : 18px;
                 color : white;
-                font-size : 18px;
+                font-size : 17px;
                 margin : -5px 0 0 0;
                 box-shadow : 1px 1px gray;
             }
@@ -198,6 +206,10 @@
                 position : absolute;
                 top : 0px;
                 left : 0px;
+            }
+
+            .optionButtonLabel {
+                font-size : 80%;
             }
 
         </style>
@@ -230,9 +242,11 @@
 
                 <div id = "effConfigDiv" class = 'guiSubPanel'>
                     <div class = "tip" id = "effTip">
-                        (Optional) Test Wavelengths, nm 
+                        (Optional) Grating Efficiency Wavelengths, nm 
                     </div>
                 </div>
+
+                
 
 
             </div>
@@ -250,6 +264,7 @@
                     Select Gratings
                 </div>
             </div>
+
             <div id = "cameraConfigDiv" class = 'guiSubPanel'>
                 <div class = "tip">
                     Select Cameras
@@ -258,6 +273,15 @@
             
 
 
+        </div>
+
+        <div id = "container3" class = "rowContainer">
+            <div id = "addOptionCongifg" class = 'guiSubPanel'>
+                <div class = "tip">
+                    Additional Options
+                </div>
+                <div id = "throughputCheckBox" class = "optionButtonLabel">Show relative system throughput</div>
+            </div>
         </div>
     </div>
 
