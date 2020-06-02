@@ -322,13 +322,13 @@ function createOrUpdateTable(){
         headerLabels = headerLabels.concat(wavelengthHeaderLabels)
     }
 
-    if (app['showRelativeThroughput']){
-        var tpLabels = ['Rel. Throughput'];
+    if (app['showEV']){
+        var tpLabels = ['Start, eV', 'End, eV', 'Bandpass, eV', 'Res., eV'];
         headerLabels = headerLabels.concat(tpLabels)
     }
 
-    if (app['showEV']){
-        var tpLabels = ['Start, eV', 'End, eV', 'Bandpass, eV', 'Res., eV'];
+    if (app['showRelativeThroughput']){
+        var tpLabels = ['Rel. Throughput'];
         headerLabels = headerLabels.concat(tpLabels)
     }
 
