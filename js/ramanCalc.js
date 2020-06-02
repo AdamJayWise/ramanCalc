@@ -37,7 +37,8 @@ var app = { 'centerWavelength' : 500, // center wavelength in nm
             'activeCameras' : [],
             'activeWavelengths' : false,
             'slitWidth' : 10, // slit width in microns
-            'showRelativeThroughput' : false, // display relative system throughput calculations    
+            'showRelativeThroughput' : false, // display relative system throughput calculations
+            'showEv' : false, // display ev Results      
     };
 
 
@@ -219,14 +220,20 @@ camKeys.forEach(function(key){
 // add a wavelength efficiency input
 var effInputDiv = d3.select('#effConfigDiv').append('div')
 var effInput = effInputDiv.append('input').on('change', function(d){
-    app['activeWavelengths'] = 0;
+    app['activeWavelengths'] = false;
     var rawInput = effInput.property('value');
     if(!isNaN(Number(rawInput))){
         app['activeWavelengths'] = [Number(rawInput)];
     }
 
     else {
-        app['activeWavelengths'] = rawInput.split(',').map(a=>Number(a.trim()));
+        var wls = [];
+        rawInput.split(',').forEach(function(w){
+            if (!isNaN(Number(w.trim()))){
+                wls.push(Number(w.trim()))
+            }
+        })
+        app['activeWavelengths'] = wls;
     }
     console.log(app['activeWavelengths'])
     createOrUpdateTable();
@@ -264,6 +271,19 @@ d3.select('#throughputCheckBox')
 
 addToolTip(d3.select('#throughputCheckBox'), 'Unitless measure of light throughput through system, considering F/#.')
 
+// add callback for eV checkbox
+d3.select('#eVcheckBox')
+    .append('input')
+    .property('type','checkbox')
+    .style('display', 'inline')
+    .on('change', function(){
+        app['showEV'] = !app['showEV'];
+        createOrUpdateTable();
+})
+
+//addToolTip(d3.select('#eVcheckBox'), 'S.')
+
+
 
 // lets redo the table code to work better here, cribbing from the last one as needed
 function calcTilt(cwl, rule, dev){
@@ -296,6 +316,7 @@ function createOrUpdateTable(){
     }
 
     if (app['activeWavelengths']){
+        if (app['activeWavelengths'])
         var wavelengthHeaderLabels = app['activeWavelengths'].map(a=>`&eta;@${a}nm`);
         console.log(wavelengthHeaderLabels)
         headerLabels = headerLabels.concat(wavelengthHeaderLabels)
@@ -303,6 +324,11 @@ function createOrUpdateTable(){
 
     if (app['showRelativeThroughput']){
         var tpLabels = ['Rel. Throughput'];
+        headerLabels = headerLabels.concat(tpLabels)
+    }
+
+    if (app['showEV']){
+        var tpLabels = ['Start, eV', 'End, eV', 'Bandpass, eV', 'Res., eV'];
         headerLabels = headerLabels.concat(tpLabels)
     }
 
@@ -333,7 +359,11 @@ function createOrUpdateTable(){
                 'End, cm<sup>-1</sup>' : 'ramanEnd',
                 'Bandwidth, cm<sup>-1</sup>' : 'ramanBandwidth', 
                 'Resolution, cm<sup>-1</sup>' : 'ramanRes',
-                'Pixel Size, um' : 'pixelSize'
+                'Pixel Size, um' : 'pixelSize',
+                'Start, eV' : 'startEv',
+                'End, eV' : 'endEv',
+                'Bandpass, eV' : 'bandWidthEv',
+                'Res., eV' : 'resEv',
     };
 
     // make and populate a list of objects corresponding to spectrometer / gratings pairs
@@ -385,11 +415,29 @@ function createOrUpdateTable(){
 
                 }
 
-                if (app['ramanExcWavelength']!=0){
+                if ( (app['ramanExcWavelength']!=0) && (app['ramanExcWavelength']!='')){
                     newCombo['ramanStart'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['Start Wavelength'],2);
                     newCombo['ramanEnd'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['End Wavelength'],2);
                     newCombo['ramanBandwidth'] = r(10**7/newCombo['Start Wavelength'] - 10**7/newCombo['End Wavelength'],2);
                     newCombo['ramanRes'] = r( (10**7)/(app['centerWavelength'] - Number(newCombo['resolution'])) - ((10**7)/(app['centerWavelength'])), 3);
+                }
+
+                if(app['showEV']){
+                    newCombo['startEv'] = r(1240 / newCombo['Start Wavelength'], 2);
+                    newCombo['endEv'] = r(1240 / newCombo['End Wavelength'], 2);
+                    var camWidthMm = cameraDefs[cam]['xPixels'] * cameraDefs[cam]['xPixelSize'] / 1000;
+                    var bandwidthEV = (newCombo['startEv']-newCombo['endEv']);
+                    var dispersionEV = bandwidthEV / camWidthMm;
+                    newCombo['bandWidthEv'] = bandwidthEV;
+                    var tf = Math.cos(rad(spectrometers[spec]['fpt']))
+                    
+                    if (debug){
+                        console.log('fpt factor', tf)
+                        console.log('raw res ', dispersionEV * combinedPSF)
+                        console.log('camera widt, mm ', camWidthMm)
+                        console.log('tilted res', dispersionEV * combinedPSF / tf)
+                        newCombo['resEv'] = r( dispersionEV * combinedPSF / tf, 4);
+                    }
                 }
 
                 if (app['activeWavelengths']){
