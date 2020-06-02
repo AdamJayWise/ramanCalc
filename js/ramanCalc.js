@@ -302,7 +302,7 @@ function createOrUpdateTable(){
     }
 
     if (app['showRelativeThroughput']){
-        var tpLabels = ['Relative Throughput'];
+        var tpLabels = ['Rel. Throughput'];
         headerLabels = headerLabels.concat(tpLabels)
     }
 
@@ -413,7 +413,7 @@ function createOrUpdateTable(){
                         console.log('effective grating angle is ', effectiveGratingAngle)
                     }
                     var effectiveFnumberFactor = Math.cos(rad(effectiveGratingAngle));
-                    newCombo['throughput'] = r(effectiveFnumberFactor / (spectrometers[spec]['f#'] ** 2) / 0.077,2) 
+                    newCombo['throughput'] = r(1 / (spectrometers[spec]['f#'] ** 2) / 0.077,2) 
                 }
 
                 combinations.push(newCombo)
