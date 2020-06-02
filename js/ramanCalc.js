@@ -426,9 +426,9 @@ function createOrUpdateTable(){
                     newCombo['startEv'] = r(1240 / newCombo['Start Wavelength'], 2);
                     newCombo['endEv'] = r(1240 / newCombo['End Wavelength'], 2);
                     var camWidthMm = cameraDefs[cam]['xPixels'] * cameraDefs[cam]['xPixelSize'] / 1000;
-                    var bandwidthEV = (newCombo['startEv']-newCombo['endEv']);
+                    var bandwidthEV = Math.abs(newCombo['startEv']-newCombo['endEv']);
                     var dispersionEV = bandwidthEV / camWidthMm;
-                    newCombo['bandWidthEv'] = bandwidthEV;
+                    newCombo['bandWidthEv'] = r(bandwidthEV,2);
                     var tf = Math.cos(rad(spectrometers[spec]['fpt']))
                     
                     if (debug){
