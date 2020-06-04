@@ -269,7 +269,7 @@ d3.select('#throughputCheckBox')
         createOrUpdateTable();
 })
 
-addToolTip(d3.select('#throughputCheckBox'), 'Unitless measure of light throughput through system, considering F/#.')
+addToolTip(d3.select('#throughputCheckBox'), 'Unitless measure of light throughput in the spectrometer, considering F/# and grating tilt.')
 
 // add callback for eV checkbox
 d3.select('#eVcheckBox')
@@ -330,7 +330,7 @@ function createOrUpdateTable(){
     if (app['showRelativeThroughput']){
         var tpLabels = ['Rel. Throughput'];
         headerLabels = headerLabels.concat(tpLabels)
-    }
+    }   
 
     headerLabels.forEach(function(label){
         var headCell = headerRow.append('th').html(label);
@@ -456,12 +456,13 @@ function createOrUpdateTable(){
 
                 if (app['showRelativeThroughput']){
                     headerDict['Relative Throughput'] = 'throughput';
-                    var effectiveGratingAngle = spectrometers[spec]['dev'] + gratTilt;
+                    var effectiveGratingAngle = spectrometers[spec]['dev'] - gratTilt;
                     if (debug){
                         console.log('effective grating angle is ', effectiveGratingAngle)
                     }
                     var effectiveFnumberFactor = Math.cos(rad(effectiveGratingAngle));
-                    newCombo['throughput'] = r(1 / (spectrometers[spec]['f#'] ** 2) / 0.077,2) 
+                    //newCombo['throughput'] = r(1 / (spectrometers[spec]['f#'] ** 2) / 0.077,2) // using nominal f#
+                    newCombo['throughput'] = r(effectiveFnumberFactor / ( spectrometers[spec]['f#'] ** 2) / 0.077,2) //using effective f#
                 }
 
                 combinations.push(newCombo)
