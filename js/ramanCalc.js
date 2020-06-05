@@ -39,6 +39,7 @@ var app = { 'centerWavelength' : 500, // center wavelength in nm
             'slitWidth' : 10, // slit width in microns
             'showRelativeThroughput' : false, // display relative system throughput calculations
             'showEv' : false, // display ev Results      
+            'showFieldDispersion' : false, //show linear dispersion over the field of the sensor
     };
 
 
@@ -89,6 +90,8 @@ function addToolTip(targetSelection, message){
         })
         
         var messageDiv = d3.select('body').append('div').classed('messageDiv', true);
+        messageDiv.style('left', d3.event.x - messageDiv.style('width').split('px')[0] + 'px')
+        messageDiv.style('top', d3.event.y + 'px')
         messageDiv.text(message);
         messageDiv.on('click', function(){
             screenDiv.remove();
@@ -271,6 +274,19 @@ d3.select('#throughputCheckBox')
 
 addToolTip(d3.select('#throughputCheckBox'), 'Unitless measure of light throughput in the spectrometer, considering F/# and grating tilt.')
 
+// add callback for dispersion over field checkbox
+d3.select('#fieldDispersionCheckBox')
+    .append('input')
+    .property('type','checkbox')
+    .style('display', 'inline')
+    .on('change', function(){
+        app['showFieldDispersion'] = !app['showFieldDispersion'];
+        createOrUpdateTable();
+})
+
+addToolTip(d3.select('#fieldDispersionCheckBox'), 'Calcuate and show dispersion in nm/mm across the field of the sensor.  Values are calculated at the edges and center of the chip.')
+
+
 // add callback for eV checkbox
 d3.select('#eVcheckBox')
     .append('input')
@@ -332,6 +348,11 @@ function createOrUpdateTable(){
         headerLabels = headerLabels.concat(tpLabels)
     }   
 
+    if (app['showFieldDispersion']){
+        var tpLabels = ['Dispersion, Short Wavelength Edge, nm/mm', 'Center, nm/mm', 'Long-Wavelength Edge, nm/mm'];
+        headerLabels = headerLabels.concat(tpLabels)
+    }  
+
     headerLabels.forEach(function(label){
         var headCell = headerRow.append('th').html(label);
         headCell.attr('parameter' , label)
@@ -386,6 +407,8 @@ function createOrUpdateTable(){
                                                 spectrometers[spec]['fpt'],
                                                 cameraDefs[cam]['xPixels'],
                                                 cameraDefs[cam]['xPixelSize']  );
+
+                                                
 
                 var intensifierPsf = 0;
                 if (cameraDefs[cam]['isIntensified']){
@@ -464,6 +487,34 @@ function createOrUpdateTable(){
                     //newCombo['throughput'] = r(1 / (spectrometers[spec]['f#'] ** 2) / 0.077,2) // using nominal f#
                     newCombo['throughput'] = r(effectiveFnumberFactor / ( spectrometers[spec]['f#'] ** 2) / 0.077,2) //using effective f#
                 }
+
+                if (app['showFieldDispersion']){
+                    headerDict['Linear Dispersion, Start, nm/mm'] = 'linearDispersionStart';
+                    headerDict['Middle'] = 'linearDispersionMiddle';
+                    headerDict['End'] = 'linearDispersionEnd';
+
+                    var x = 0;
+                    var d = Math.abs(spectrometers[spec]['dev']);
+                    var t = Math.abs(gratTilt);
+                    var fl = spectrometers[spec]['fl'];
+                    var Q = Math.sin(rad(d-t));
+                    var p = d+t;
+                    var rule = gratings[grat]['rule'];
+                    var tf = Math.cos( rad(spectrometers[spec]['fpt']) );
+
+                    function getDispersion(x0){
+                        return r(tf * fl * Math.cos(Math.atan(x0/fl) + rad(p) ) / (fl**2 + x0**2) / (rule * 10**-6), 2)
+                    }
+                    
+                    newCombo['linearDispersionStart'] = getDispersion(-cameraDefs[cam]['xPixels'] * cameraDefs[cam]['xPixelSize'] / 2000)
+                    newCombo['linearDispersionMiddle'] = getDispersion(0)
+                    newCombo['linearDispersionEnd'] = getDispersion(cameraDefs[cam]['xPixels'] * cameraDefs[cam]['xPixelSize'] / 2000)
+
+                    console.log(newCombo['linearDispersionMiddle'])
+                }
+
+
+                
 
                 combinations.push(newCombo)
             });
