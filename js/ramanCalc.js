@@ -284,7 +284,7 @@ d3.select('#fieldDispersionCheckBox')
         createOrUpdateTable();
 })
 
-addToolTip(d3.select('#fieldDispersionCheckBox'), 'Calcuate and show dispersion in nm/mm across the field of the sensor.  Values are calculated at the edges and center of the chip.')
+addToolTip(d3.select('#fieldDispersionCheckBox'), 'Calculate and display dispersion in nm/mm across the sensor, rather than just showing an average/nominal value.  Values are calculated at the edges and center of the chip.')
 
 
 // add callback for eV checkbox
@@ -319,7 +319,7 @@ function createOrUpdateTable(){
                          'Rule, l/mm',
                          'Blaze',
                          'Grating Angle',
-                         'Dispersion, nm/mm',
+                         'Nominal Dispersion, nm/mm',
                         'Start, nm',
                         'End, nm',
                         'Bandpass, nm',
@@ -349,7 +349,7 @@ function createOrUpdateTable(){
     }   
 
     if (app['showFieldDispersion']){
-        var tpLabels = ['Dispersion, Short Wavelength Edge, nm/mm', 'Center, nm/mm', 'Long-Wavelength Edge, nm/mm'];
+        var tpLabels = ['Dispersion <br> Short Wavelength Edge, nm/mm', 'Dispersion<br>Center, nm/mm', 'Dispersion<br>Long Wavelength Edge, nm/mm'];
         headerLabels = headerLabels.concat(tpLabels)
     }  
 
