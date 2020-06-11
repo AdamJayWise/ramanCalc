@@ -131,7 +131,7 @@ cwlInput.on('input', function(){
 var cwlRange = d3.select('#wlConfigDiv').append('input');
 cwlRange.attr('type', 'range')
     .attr('min', 200)
-    .attr('max', 2000)
+    .attr('max', 20000)
     .attr('value', app['centerWavelength'])
     .on('input', function(){
         app['centerWavelength'] = Number(this.value);
@@ -512,6 +512,7 @@ function createOrUpdateTable(){
 
                     console.log(newCombo['linearDispersionMiddle'])
                 }
+                
 
 
                 
