@@ -310,9 +310,13 @@ function calcTilt(cwl, rule, dev){
 
 // primary function to build the table that displays results
 function createOrUpdateTable(){
+
+    // remove all old tables
     d3.selectAll('table').remove();
+    
     var resultTable = d3.select('#results').append('table').attr('id','results');
-    var headerRow = resultTable.append('tr');
+    var headerRow = resultTable.append('thead').append('tr');
+    var resultBody = resultTable.append('tbody')
     var headerLabels = ['Spectrometer',
                         'Camera',
                         'Pixel Size, um',
@@ -532,7 +536,7 @@ function createOrUpdateTable(){
 
     //append a row corresponding to each combination
     combinations.forEach(function(combo){
-        var newRow = resultTable.append('tr');
+        var newRow = resultBody.append('tr');
         if ( (Math.abs(Number(combo['gratingTilt'])) >= 32) | (typeof(combo['gratingTilt']) == typeof('yes'))){
                 newRow.classed('warning', true);
         }
