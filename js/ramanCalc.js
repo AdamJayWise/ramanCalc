@@ -312,10 +312,10 @@ function calcTilt(cwl, rule, dev){
 function createOrUpdateTable(){
 
     // remove all old tables
-    d3.selectAll('table').remove();
+    d3.select('#results').selectAll('table').remove();
     
     var resultTable = d3.select('#results').append('table').attr('id','results');
-    var headerRow = resultTable.append('thead').append('tr');
+    var headerRow = resultTable.append('tr');
     var resultBody = resultTable.append('tbody')
     var headerLabels = ['Spectrometer',
                         'Camera',
@@ -516,10 +516,6 @@ function createOrUpdateTable(){
 
                     console.log(newCombo['linearDispersionMiddle'])
                 }
-                
-
-
-                
 
                 combinations.push(newCombo)
             });
