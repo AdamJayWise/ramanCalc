@@ -315,8 +315,8 @@ function createOrUpdateTable(){
     d3.select('#results').selectAll('table').remove();
     
     var resultTable = d3.select('#results').append('table').attr('id','results');
-    var headerRow = resultTable.append('tr');
     var resultBody = resultTable.append('tbody')
+    var headerRow = resultBody.append('tr');
     var headerLabels = ['Spectrometer',
                         'Camera',
                         'Pixel Size, um',
