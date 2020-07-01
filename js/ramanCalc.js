@@ -444,9 +444,13 @@ function createOrUpdateTable(){
 
                 if ( (app['ramanExcWavelength']!=0) && (app['ramanExcWavelength']!='')){
                     newCombo['ramanStart'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['Start Wavelength'],2);
+                    //newCombo['ramanCenter'] = r(10**7/app['ramanExcWavelength'] - 10**7/app['centerWavelength'],2);
                     newCombo['ramanEnd'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['End Wavelength'],2);
                     newCombo['ramanBandwidth'] = r(10**7/newCombo['Start Wavelength'] - 10**7/newCombo['End Wavelength'],2);
-                    newCombo['ramanRes'] = r( (10**7)/(app['centerWavelength'] - Number(newCombo['resolution'])) - ((10**7)/(app['centerWavelength'])), 3);
+                    
+                    newCombo['ramanRes'] = r( (10**7)/(app['centerWavelength'] - Number(newCombo['resolution'])) - ((10**7)/(app['centerWavelength'])), 2);
+ 
+
                 }
 
                 if(app['showEV']){
