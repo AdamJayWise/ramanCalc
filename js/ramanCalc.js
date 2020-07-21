@@ -492,8 +492,9 @@ function createOrUpdateTable(){
                         console.log('effective grating angle is ', effectiveGratingAngle)
                     }
                     var effectiveFnumberFactor = Math.cos(rad(effectiveGratingAngle));
-                    //newCombo['throughput'] = r(1 / (spectrometers[spec]['f#'] ** 2) / 0.077,2) // using nominal f#
-                    newCombo['throughput'] = r(effectiveFnumberFactor / ( spectrometers[spec]['f#'] ** 2) / 0.077,2) //using effective f#
+                    var throughPut = r(effectiveFnumberFactor / ( spectrometers[spec]['f#'] ** 2) / 0.077,2);
+                    if (isNaN(throughPut)){ throughPut = '*'; }
+                    newCombo['throughput'] =  throughPut //using effective f#
                 }
 
                 if (app['showFieldDispersion']){

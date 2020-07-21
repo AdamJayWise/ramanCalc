@@ -40,7 +40,7 @@ var spectrometers = {
                 'fl' : 328,
                 'gratingSizeX' : '80',
                 'gratingSizeY' : '80',
-                'f#' : 32.5,
+                'f#' : '*',
                 'displayName' : 'Kymera 328 with TruRes'
                 }, 
 
