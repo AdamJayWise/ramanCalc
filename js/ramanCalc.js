@@ -538,11 +538,12 @@ function createOrUpdateTable(){
     //append a row corresponding to each combination
     combinations.forEach(function(combo){
         var newRow = resultBody.append('tr');
-        if ( (Math.abs(Number(combo['gratingTilt'])) >= 32) | (typeof(combo['gratingTilt']) == typeof('yes'))){
-                newRow.classed('warning', true);
-        }
+        
         Object.keys(combo).forEach(function(key){
-            newRow.append('td').html(combo[key])
+            var newTd = newRow.append('td').html(combo[key])
+            if ( (Math.abs(Number(combo['gratingTilt'])) >= 32) | (typeof(combo['gratingTilt']) == typeof('yes'))){
+                newTd.classed('warning', true);
+            }
         })
     });
 
