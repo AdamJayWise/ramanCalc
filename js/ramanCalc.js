@@ -494,7 +494,7 @@ function createOrUpdateTable(){
                     var effectiveFnumberFactor = Math.cos(rad(effectiveGratingAngle));
                     var throughPut = r(effectiveFnumberFactor / ( spectrometers[spec]['f#'] ** 2) / 0.077,2);
                     if (isNaN(throughPut)){ throughPut = '*'; }
-                    newCombo['throughput'] =  throughPut //using effective f#
+                    newCombo['throughput'] =  throughPut; //using effective f#
                 }
 
                 if (app['showFieldDispersion']){
