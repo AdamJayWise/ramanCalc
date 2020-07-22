@@ -121,7 +121,7 @@ function createGraph(ruleRange, targetSelector){
             .attr('d', newLine(g['data']))
             .attr('fill','none')
             .attr('stroke',`rgb(${rando()},${rando()},${rando()})`)
-            .attr('stroke-width', 5)
+            .attr('stroke-width', 3)
             .on('click', function(e){ 
                 if(app['activeGratings'].indexOf(lookupTable[g['partNumber']]) == -1){
                     app['activeGratings'].push(lookupTable[g['partNumber']]);
@@ -136,12 +136,14 @@ function createGraph(ruleRange, targetSelector){
             })
             
             newPath.on('mouseover', function(){
+                    d3.select(this).style('stroke-width', '6px')
                     var nearestTooltip = d3.select(this.parentNode).select('.traceIdentifier');
                     var newText = lookupTable[g['partNumber']];
                     nearestTooltip.html(newText);
             })
 
             newPath.on('mouseout', function(){
+                d3.select(this).style('stroke-width', '3px')
                 var nearestTooltip = d3.select(this.parentNode).select('.traceIdentifier');
                 var newText = lookupTable[g['partNumber']];
                 nearestTooltip.html('');
@@ -200,7 +202,7 @@ function createGraph(ruleRange, targetSelector){
         .text('')
 }
 
-var ruleRanges = [[80,140], [150,160], [300,300], [400,400], [500,600], [800,1000], [1200,1210], [1400,1400], [1500,1700], [1800,1800], [2400,2400]];
+var ruleRanges = [[80,140], [150,160], [300,300], [400,400], [500,500], [600,600], [800,1000], [1200,1210], [1400,1400], [1500,1700], [1800,1800], [2400,2400]];
 ruleRanges.forEach(function(r){createGraph(r, '#graphs')});
 
 // print all gratings without data for debug purposes
