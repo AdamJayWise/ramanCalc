@@ -264,7 +264,10 @@ var slitInput = slitInputDiv.append('input').property('value',10).on('change', f
 
 // add an iris slider
 var irisSliderDiv = d3.select('#irisSlider')
+
 var irisRange = irisSliderDiv
+    .append('div')
+    .style('display','inline')
     .append('input')
     .style('display', 'block-inline')
     .style('padding', '0')
@@ -275,7 +278,10 @@ var irisRange = irisSliderDiv
     .attr('value', 100)
     .classed('slider',true)
 
+//add tooltip for iris slider
     
+addToolTip(d3.select('#irisSlider'), 'TruRes iris setting - an optional feature that improves resolution by restricting spectrometer aperture.')
+
 
     function interp(xs, ys, x0){
         // put your goggles on this is about to get GROSS
@@ -299,9 +305,7 @@ var irisRange = irisSliderDiv
         
         var xBounds = [xs[indexAbove-1], xs[indexAbove]];
         var yBounds = [ys[indexAbove-1], ys[indexAbove]];
-        
-        console.log(indexAbove, xBounds, yBounds)
-        
+                
         // calculate the slope for linear interpolation
         var M = (yBounds[1] - yBounds[0]) / ( xBounds[1] - xBounds[0] )
 
