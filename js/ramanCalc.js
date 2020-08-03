@@ -270,9 +270,9 @@ var irisRange = irisSliderDiv
     .style('padding', '0')
     .style('width', '100px')
     .attr('type', 'range')
-    .attr('min', 10)
+    .attr('min', 30)
     .attr('max', 100)
-    .attr('value', 50)
+    .attr('value', 100)
     .classed('slider',true)
 
     
@@ -312,8 +312,8 @@ var irisRange = irisSliderDiv
 // add callback for iris slider
 irisRange.on('change', function(){
     app.irisPosition = Number(this.value)
-    spectrometers['Kymera 328 with TruRes']['f#'] = interp([10,30,50,80,100],[32.5,10.8,6.5,4.3,4.1], app.irisPosition)
-    spectrometers['Kymera 328 with TruRes']['psf'] = interp([10,30,50,80,100],[29.91, 29.91, 34.18, 38.45 ,43.60], app.irisPosition)
+    spectrometers['Kymera 328 with TruRes']['f#'] = interp([30,50,80,100],[10.8,6.5,4.3,4.1], app.irisPosition)
+    spectrometers['Kymera 328 with TruRes']['psf'] = interp([30,50,80,100],[29.91, 34.18, 38.45 ,43.60], app.irisPosition)
 
     createOrUpdateTable();
 })
@@ -373,7 +373,7 @@ function createOrUpdateTable(){
         d3.selectAll('#irisSlider').style('display', 'none')
     }
     else {
-        d3.selectAll('#irisSlider').style('display', 'block')
+        d3.selectAll('#irisSlider').style('display', 'table')
     }
 
 
