@@ -6,6 +6,12 @@
 
         <style>
 
+            .slider {
+                position : relative;
+                top : 4px;
+                left : 2px;
+            }
+
             body {
                 font-family: 'Open Sans', sans-serif;
             }
@@ -126,9 +132,7 @@
                 flex-direction : row;
             }
 
-            input[type=range]{
-                display: none;
-            }
+
 
             input[type=checkbox]{
                 display : inline-block;
@@ -310,6 +314,7 @@
 
                 <div id = "fieldDispersionCheckBox" class = "optionButtonLabel">Show Dispersion Across Sensor</div>
 
+                <div id = "irisSlider" class = "optionButtonLabel"> TruRes Iris</div>
      
                 <div id = "eVcheckBox" class = "optionButtonLabel" style = "display : none">Show Results in eV</div>
             </div>

@@ -137,6 +137,7 @@ cwlRange.attr('type', 'range')
         app['centerWavelength'] = Number(this.value);
         updateDisplay();
     })
+    .style("display","none")
 
 var ramanInputDiv = d3.select('#ramanConfigDiv').append('div');
 var ramanInput = ramanInputDiv.append('input');
@@ -195,7 +196,6 @@ function createSelector(targetDivSelector, labelText, activeItemArray, sourceObj
             activeItemArray.push(this.value);
             }); // for each of those, get its value
         createOrUpdateTable();  
-        console.log('hello')
     });
     Object.keys(sourceObject).forEach(function(key){
         newSelect.append('option').property('value', key).text(key)
@@ -262,6 +262,62 @@ var slitInput = slitInputDiv.append('input').property('value',10).on('change', f
     createOrUpdateTable();
 })
 
+// add an iris slider
+var irisSliderDiv = d3.select('#irisSlider')
+var irisRange = irisSliderDiv
+    .append('input')
+    .style('display', 'block-inline')
+    .style('padding', '0')
+    .style('width', '100px')
+    .attr('type', 'range')
+    .attr('min', 10)
+    .attr('max', 100)
+    .attr('value', 50)
+    .classed('slider',true)
+
+    
+
+    function interp(xs, ys, x0){
+        // put your goggles on this is about to get GROSS
+
+        var indexFound = xs.indexOf(x0);
+        if (indexFound != -1){
+            return ys[indexFound]
+        }
+
+        if (x0 < xs[0]){
+            console.log('value too small')
+            return NaN;
+        }
+
+        if (x0 > xs.slice(-1)[0]){
+            console.log('value too large')
+            return NaN;
+        }
+
+        var indexAbove = xs.findIndex( function(xi){return xi>x0} );
+        
+        var xBounds = [xs[indexAbove-1], xs[indexAbove]];
+        var yBounds = [ys[indexAbove-1], ys[indexAbove]];
+        
+        console.log(indexAbove, xBounds, yBounds)
+        
+        // calculate the slope for linear interpolation
+        var M = (yBounds[1] - yBounds[0]) / ( xBounds[1] - xBounds[0] )
+
+        // return a linearly interpolated value for the Eff at a specific wavelength lambda
+        return M*(x0 - xBounds[1]) + yBounds[1]
+   }
+
+// add callback for iris slider
+irisRange.on('change', function(){
+    app.irisPosition = Number(this.value)
+    spectrometers['Kymera 328 with TruRes']['f#'] = interp([10,30,50,80,100],[32.5,10.8,6.5,4.3,4.1], app.irisPosition)
+    spectrometers['Kymera 328 with TruRes']['psf'] = interp([10,30,50,80,100],[29.91, 29.91, 34.18, 38.45 ,43.60], app.irisPosition)
+
+    createOrUpdateTable();
+})
+
 // add callback for throughput checkbox
 d3.select('#throughputCheckBox')
     .append('input')
@@ -310,6 +366,18 @@ function calcTilt(cwl, rule, dev){
 
 // primary function to build the table that displays results
 function createOrUpdateTable(){
+
+    // if the truespec spectrometer is in the array of active spectrometers, unhide the iris slider
+    // if the truespec spectrometer is not in the list of active spectrometers, hide the iris slider
+    if (app.activeSpect.indexOf('Kymera 328 with TruRes') == -1){
+        d3.selectAll('#irisSlider').style('display', 'none')
+    }
+    else {
+        d3.selectAll('#irisSlider').style('display', 'block')
+    }
+
+
+
 
     // remove all old tables
     d3.select('#results').selectAll('table').remove();
