@@ -314,7 +314,7 @@ addToolTip(d3.select('#irisSlider'), 'TruRes iris setting - an optional feature 
    }
 
 // add callback for iris slider
-irisRange.on('change', function(){
+irisRange.on('input', function(){
     app.irisPosition = Number(this.value)
     spectrometers['Kymera 328 with TruRes']['f#'] = interp([30,50,80,100],[10.8,6.5,4.3,4.1], app.irisPosition)
     spectrometers['Kymera 328 with TruRes']['psf'] = interp([30,50,80,100],[29.91, 34.18, 38.45 ,43.60], app.irisPosition)
