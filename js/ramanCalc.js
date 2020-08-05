@@ -280,7 +280,7 @@ var irisRange = irisSliderDiv
 
 //add tooltip for iris slider
     
-addToolTip(d3.select('#irisSlider'), 'TruRes iris setting - an optional feature that improves resolution by restricting spectrometer aperture.')
+addToolTip(d3.select('#irisSlider'), 'Size of TrueRes iris aperture, over the range 30 to 100 steps.  A larger aperture allows more light through, while a smaller aperture yields a higher spectral resolution.')
 
 
     function interp(xs, ys, x0){
