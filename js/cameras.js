@@ -251,11 +251,24 @@ var cameraDefs = {
             yPixelSize : 24,
             isIntensified : true,
             containerDivID : 'subContainer',
-            displayName: 'iStar CCD 312'},
+            displayName: 'iStar CCD 312',
+            intensifierSize : 18, // intensifier size in mm
+        },
 
-            'iStar CCD 320' : {
+            'iStar CCD 320 (18mm Intensifier)' : {
                 shortName : 'iStar320',
-                xPixels : 1024,
+                xPixels : 690,
+                yPixels : 256,
+                xPixelSize : 26,
+                yPixelSize : 26,
+                isIntensified : true,
+                containerDivID : 'subContainer',
+                displayName: 'iStar CCD 320'},
+
+
+            'iStar CCD 320 (25mm Intensifier)' : {
+                shortName : 'iStar320',
+                xPixels : 960,
                 yPixels : 256,
                 xPixelSize : 26,
                 yPixelSize : 26,
@@ -273,15 +286,26 @@ var cameraDefs = {
                 containerDivID : 'subContainer',
                 displayName: 'iStar CCD 334'},
 
-            'iStar CCD 340' : {
+            'iStar CCD 340 (18mm Intensifier)' : {
                 shortName : 'iStar340',
-                xPixels : 2048,
+                xPixels : 1330,
                 yPixels : 512,
                 xPixelSize : 13.5,
                 yPixelSize : 13.5,
                 isIntensified : true,
                 containerDivID : 'subContainer',
                 displayName: 'iStar CCD 340'},
+
+            'iStar CCD 340 (25mm Intensifier)' : {
+                shortName : 'iStar340',
+                xPixels : 1850,
+                yPixels : 512,
+                xPixelSize : 13.5,
+                yPixelSize : 13.5,
+                isIntensified : true,
+                containerDivID : 'subContainer',
+                displayName: 'iStar CCD 340'},
+    
 
             'iStar sCMOS' : {
                 shortName : 'iStarscmos',

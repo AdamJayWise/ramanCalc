@@ -316,11 +316,15 @@ addToolTip(d3.select('#irisSlider'), 'Size of TrueRes iris aperture, over the ra
 // add callback for iris slider
 irisRange.on('input', function(){
     app.irisPosition = Number(this.value)
-    spectrometers['Kymera 328 with TruRes']['f#'] = interp([30,50,80,100],[10.8,6.5,4.3,4.1], app.irisPosition)
-    spectrometers['Kymera 328 with TruRes']['psf'] = interp([30,50,80,100],[29.91, 34.18, 38.45 ,43.60], app.irisPosition)
+    spectrometers['Kymera 328i with TruRes']['f#'] = interp([30,50,80,100],[10.8,6.5,4.3,4.1], app.irisPosition)
+    spectrometers['Kymera 328i with TruRes']['psf'] = interp([30,50,80,100],[29.91, 34.18, 38.45 ,43.60], app.irisPosition)
 
     createOrUpdateTable();
+
+    d3.selectAll('.trueRes').style('color','red').style('font-weight',900).transition().duration(1500).style('color','black').style('font-weight', 400)
 })
+
+
 
 // add callback for throughput checkbox
 d3.select('#throughputCheckBox')
@@ -373,7 +377,7 @@ function createOrUpdateTable(){
 
     // if the truespec spectrometer is in the array of active spectrometers, unhide the iris slider
     // if the truespec spectrometer is not in the list of active spectrometers, hide the iris slider
-    if (app.activeSpect.indexOf('Kymera 328 with TruRes') == -1){
+    if (app.activeSpect.indexOf('Kymera 328i with TruRes') == -1){
         d3.selectAll('#irisSlider').style('display', 'none')
     }
     else {
@@ -514,6 +518,7 @@ function createOrUpdateTable(){
 
                 }
 
+
                 if ( (app['ramanExcWavelength']!=0) && (app['ramanExcWavelength']!='')){
                     newCombo['ramanStart'] = r(10**7/app['ramanExcWavelength'] - 10**7/newCombo['Start Wavelength'],2);
                     //newCombo['ramanCenter'] = r(10**7/app['ramanExcWavelength'] - 10**7/app['centerWavelength'],2);
@@ -613,6 +618,12 @@ function createOrUpdateTable(){
         
         Object.keys(combo).forEach(function(key){
             var newTd = newRow.append('td').html(combo[key])
+
+            // append a trueres class if this td happens to be a trueres resolution
+            if ( (combo['spectrometer'] == 'Kymera 328i with TruRes') & (key == 'resolution' || key == 'ramanRes') ){
+                newTd.classed('trueRes', true)
+            }
+
             if ( (Math.abs(Number(combo['gratingTilt'])) >= 32) | (typeof(combo['gratingTilt']) == typeof('yes'))){
                 newTd.classed('warning', true);
             }

@@ -11,7 +11,7 @@ var spectrometers = {
                   'displayName' : 'Shamrock 163', // what to call it in the GUI,
   },
 
-  'Kymera 193' : {//'psf' : 60, // original psf from Tristan's script, in um
+  'Kymera 193i' : {//'psf' : 60, // original psf from Tristan's script, in um
                   'psf' : 59.16 * 0.98989, // point spread function after removal of 10um slit 
                    'dev' : -14, // deviation in degrees
                   'fpt' : 4.56, // focal plane tilt, in degrees
@@ -19,10 +19,10 @@ var spectrometers = {
                   'gratingSizeX' : '45',
                   'gratingSizeY' : '45',
                   'f#' : 3.6,
-                  'displayName' : 'Kymera 193', // what to call it in the GUI
+                  'displayName' : 'Kymera 193i', // what to call it in the GUI
                   },
 
-  'Kymera 328' : { //'psf' : 40,
+  'Kymera 328i' : { //'psf' : 40,
                   'psf' : 38.73 * 1.126,
                   'dev' : -10.875,
                  'fpt' : 5,
@@ -30,10 +30,10 @@ var spectrometers = {
                  'gratingSizeX' : '80',
                  'gratingSizeY' : '80',
                  'f#' : 4.1,
-                 'displayName' : 'Kymera 328'
+                 'displayName' : 'Kymera 328i'
                  }, 
 
-  'Kymera 328 with TruRes' : { //'psf' : 40,
+  'Kymera 328i with TruRes' : { //'psf' : 40,
                  'psf' : 38.73 * 0.7723,
                  'dev' : -10.875,
                 'fpt' : 5,
@@ -41,10 +41,10 @@ var spectrometers = {
                 'gratingSizeX' : '80',
                 'gratingSizeY' : '80',
                 'f#' : '*',
-                'displayName' : 'Kymera 328 with TruRes'
+                'displayName' : 'Kymera 328i with TruRes'
                 }, 
 
-  'Shamrock 500' : {//'psf' : 40,
+  'Shamrock 500i' : {//'psf' : 40,
               'psf' : 38.73,
               'dev' : -11.5,
               'fpt' : 3.752,
@@ -52,7 +52,7 @@ var spectrometers = {
               'gratingSizeX' : '80',
               'gratingSizeY' : '80',
               'f#' : 6.5,
-              'displayName' : 'Shamrock 500'
+              'displayName' : 'Shamrock 500i'
                 }, 
   
   'Shamrock 750' : {//'psf' : 40,
