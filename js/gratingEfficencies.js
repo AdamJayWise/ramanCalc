@@ -106,6 +106,9 @@ function createGraph(ruleRange, targetSelector){
     gratingEfficiencies.forEach(function(g){
 
         // if this grating is outside of the selected rule range, do nothing
+        if(!gratings[lookupTable[g['partNumber']]]){
+            console.log(g)
+        }
         var thisRule = gratings[lookupTable[g['partNumber']]]['rule'];
         if( (thisRule<ruleRange[0]) | (thisRule>ruleRange[1]) ){
             return 0
