@@ -9,6 +9,7 @@ var spectrometers = {
                   'gratingSizeY' : '45',
                   'f#' : 3.6,
                   'displayName' : 'Shamrock 163', // what to call it in the GUI,
+                  'partPrefix' : 'SR1',
   },
 
   'Kymera 193i' : {//'psf' : 60, // original psf from Tristan's script, in um
@@ -20,6 +21,8 @@ var spectrometers = {
                   'gratingSizeY' : '45',
                   'f#' : 3.6,
                   'displayName' : 'Kymera 193i', // what to call it in the GUI
+                  'partPrefix' : 'SR2',
+
                   },
 
   'Kymera 328i' : { //'psf' : 40,
@@ -30,7 +33,8 @@ var spectrometers = {
                  'gratingSizeX' : '80',
                  'gratingSizeY' : '80',
                  'f#' : 4.1,
-                 'displayName' : 'Kymera 328i'
+                 'displayName' : 'Kymera 328i',
+                 'partPrefix' : 'SR',
                  }, 
 
   'Kymera 328i with TruRes' : { //'psf' : 40,
@@ -41,7 +45,8 @@ var spectrometers = {
                 'gratingSizeX' : '80',
                 'gratingSizeY' : '80',
                 'f#' : '*',
-                'displayName' : 'Kymera 328i with TruRes'
+                'displayName' : 'Kymera 328i with TruRes',
+                'partPrefix' : 'SR',
                 }, 
 
   'Shamrock 500i' : {//'psf' : 40,
@@ -52,7 +57,8 @@ var spectrometers = {
               'gratingSizeX' : '80',
               'gratingSizeY' : '80',
               'f#' : 6.5,
-              'displayName' : 'Shamrock 500i'
+              'displayName' : 'Shamrock 500i',
+              'partPrefix' : 'SR5',
                 }, 
   
   'Shamrock 750' : {//'psf' : 40,
@@ -63,6 +69,7 @@ var spectrometers = {
               'gratingSizeX' : '77',
               'gratingSizeY' : '77',
               'f#' : 9.7,
-              'displayName' : 'Shamrock 750'
+              'displayName' : 'Shamrock 750',
+              'partPrefix' : 'SR5',
                }, 
   };

@@ -163,6 +163,7 @@ var gratingSelect = gratingSelectDiv.append('select').attr('multiple','true');;
           console.log(gratings[this.value]['Part Number']) }); // for each of those, get its value
     createOrUpdateTable();  
 });
+
 Object.keys(gratings).forEach(function(key){
     gratingSelect.append('option').property('value', key).html(key)
 })
@@ -398,6 +399,7 @@ function createOrUpdateTable(){
                         'Pixel Size, um',
                          'Rule, l/mm',
                          'Blaze',
+                         'Grating P/N',
                          'Grating Angle',
                          'Nominal Dispersion, nm/mm',
                         'Start, nm',
@@ -465,6 +467,7 @@ function createOrUpdateTable(){
                 'End, eV' : 'endEv',
                 'Bandpass, eV' : 'bandWidthEv',
                 'Res., eV' : 'resEv',
+                'Grating P/N' : 'gratingPartNumber',
     };
 
     // make and populate a list of objects corresponding to spectrometer / gratings pairs
@@ -473,14 +476,18 @@ function createOrUpdateTable(){
         app['activeGratings'].forEach(function(grat){
             app['activeCameras'].forEach(function(cam){
 
+
+                // check if grating has a part number in the catalog, based on spectrometer
+                var gratingPartNumber = gratingProductTable[grat][spectrometers[spec]['partPrefix']] || 'Check Availability';
+
                 var pixFactor = calcPixFactor(cameraDefs[cam]['xPixelSize']);
 
                 // iterate through each spectrometer spec + each grating grat
-                var gratTilt = r(calcTilt(app['centerWavelength'], gratings[grat]['rule'], spectrometers[spec]['dev']), 2) || 'Out of Range';
+                var gratTilt = r(calcTilt(app['centerWavelength'], gratings[grat]['Rule'], spectrometers[spec]['dev']), 2) || 'Out of Range';
                 
                 
                 var wlObj = calcWavelengthRange(app['centerWavelength'],
-                                                gratings[grat]['rule'],
+                                                gratings[grat]['Rule'],
                                                 spectrometers[spec]['dev'],
                                                 spectrometers[spec]['fl'],
                                                 gratTilt,
@@ -506,8 +513,9 @@ function createOrUpdateTable(){
                     'camera' : cam,
                     'pixelSize' : cameraDefs[cam]['xPixelSize'],
                     //'focal length' : spectrometers[spec]['fl'],
-                    'rule' : gratings[grat]['rule'],
+                    'rule' : gratings[grat]['Rule'],
                     'blaze' : gratings[grat]['Blaze'],
+                    'gratingPartNumber' : gratingPartNumber,
                     'gratingTilt' : gratTilt,
                     'dispersion' : r(wlObj['linearDispersion'], 2) || '-',
                     'Start Wavelength' : r(wlObj['startWavelength'], 2) || '-',
@@ -515,6 +523,7 @@ function createOrUpdateTable(){
                     'End Wavelength' : r(wlObj['endWavelength'], 2) || '-',
                     'bandWidth' : r(wlObj['bandWidth'], 2) || '-',
                     'resolution' : r(wlObj['linearDispersion'] * combinedPSF, 2) || '-',
+
 
                 }
 
@@ -585,7 +594,7 @@ function createOrUpdateTable(){
                     var fl = spectrometers[spec]['fl'];
                     var Q = Math.sin(rad(d-t));
                     var p = d+t;
-                    var rule = gratings[grat]['rule'];
+                    var rule = gratings[grat]['Rule'];
                     var tf = Math.cos( rad(spectrometers[spec]['fpt']) );
 
                     function getDispersion(x0){
@@ -615,6 +624,7 @@ function createOrUpdateTable(){
     //append a row corresponding to each combination
     combinations.forEach(function(combo){
         var newRow = resultBody.append('tr');
+
         
         Object.keys(combo).forEach(function(key){
             var newTd = newRow.append('td').html(combo[key])

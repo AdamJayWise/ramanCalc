@@ -107,7 +107,7 @@ function createGraph(ruleRange, targetSelector){
 
         // if this grating is outside of the selected rule range, do nothing
         if(!gratings[lookupTable[g['partNumber']]]){
-            console.log(g)
+            console.log()
         }
         var thisRule = gratings[lookupTable[g['partNumber']]]['rule'];
         if( (thisRule<ruleRange[0]) | (thisRule>ruleRange[1]) ){
