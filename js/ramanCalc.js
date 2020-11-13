@@ -482,7 +482,7 @@ function createOrUpdateTable(){
                 // then get a master # if available
                 var masterNumber = null; // id for grating master
                 var externalPartNumber = null; // external mfgr part number
-                var fixedGratingPartNumber = gratingPartNumber.replace('SR-','SR3-').replace('SR2-','SR1-');// prefix old-style
+                var fixedGratingPartNumber = gratingPartNumber.replace('SR-','SR3-').replace('SR2-','SR1-').replace('SIL','');// prefix old-style
                 if ( (gratingPartNumber != '*') && gratingDetailsTable[fixedGratingPartNumber] ){
                     var masterNumber = gratingDetailsTable[fixedGratingPartNumber]['Master'];
                     var externalPartNumber = gratingDetailsTable[fixedGratingPartNumber]['External PN']

@@ -112,6 +112,11 @@ function createGraph(ruleRange, targetSelector){
             if(1){console.log(g['master'])}
             return 0 
         }
+
+        if(!masterToTag[g['master']]){
+            return 0
+        }
+
         var thisRule = gratingDetailsTable[lookupTable[g['master']]]['Rule'];
         if( (thisRule<ruleRange[0]) | (thisRule>ruleRange[1]) ){
             return 0
@@ -129,9 +134,10 @@ function createGraph(ruleRange, targetSelector){
             .attr('stroke',`rgb(${rando()},${rando()},${rando()})`)
             .attr('stroke-width', 3)
             .on('click', function(e){ 
-                if(app['activeGratings'].indexOf(lookupTable[g['partNumber']]) == -1){
-                    app['activeGratings'].push(lookupTable[g['partNumber']]);
-                    console.log(g['partNumber']);
+                console.log(g)
+                if(app['activeGratings'].indexOf(masterToTag[g['master']]) == -1){
+                    app['activeGratings'].push(masterToTag[g['master']]);
+                    console.log(g['master']);
                     createOrUpdateTable();
                 }
                 else {

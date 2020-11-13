@@ -570,3 +570,19 @@ var gratingProductTable = {
         'SR5' : 'SR5-GRT-0900-0550',
         },
     }
+
+    
+    var masterToTag = {};
+    Object.keys(gratingProductTable).forEach(function(tag){
+       
+        // ugh this is a huge hack... 
+        if (tag.search('Silver') !== -1){
+            return 0;
+        }
+        var fixedPN = Object.values(gratingProductTable[tag])[0].replace('SR2-','SR1-').replace('SR-','SR3-')
+        try{masterToTag[gratingDetailsTable[fixedPN]['Master']] = tag;}
+        catch{}
+        //
+    
+    }
+    )
