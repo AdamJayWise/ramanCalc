@@ -64,6 +64,7 @@ var gratingProductTable = {
         'SR1' : 'SR1-GRT-1200-0500',
         'SR2' : 'SR2-GRT-1200-0500',
         'SR5' : 'SR5-GRT-1200-0500',
+        'SR2' : 'SR2-GRT-1200-0600',
         },
     '1200 Lines/mm, 500nm Blaze, Silver':
         {
@@ -101,15 +102,8 @@ var gratingProductTable = {
         },
     '1200 Lines/mm, 850nm Blaze, Silver':
         {
-        'SR5' : 'SR5-GRT-1200-0850SIL',
-        },
-    '1200 Lines/mm, 600nm Blaze':
-        {
-        'SR2' : 'SR2-GRT-1200-0600',
-        },
-    '1200 Lines/mm, 850nm Blaze, Silver':
-        {
         'SR2' : 'SR2-GRT-1200-0850SIL',
+        'SR5' : 'SR5-GRT-1200-0850SIL',
         },
     '150 Lines/mm, 1.25um Blaze':
         {
@@ -547,11 +541,8 @@ var gratingProductTable = {
         },
     '80 Lines/mm, 870nm Blaze':
         {
-        'SR5' : 'SR5-GRT-0080-0870',
-        },
-    '80 Lines/mm, 870nm Blaze':
-        {
         'SR2' : 'SR2-GRT-0080-0870',
+        'SR5' : 'SR5-GRT-0080-0870',
         },
     '830 Lines/mm, 820nm Blaze':
         {

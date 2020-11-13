@@ -478,7 +478,20 @@ function createOrUpdateTable(){
 
 
                 // check if grating has a part number in the catalog, based on spectrometer
-                var gratingPartNumber = gratingProductTable[grat][spectrometers[spec]['partPrefix']] || 'Check Availability';
+                var gratingPartNumber = gratingProductTable[grat][spectrometers[spec]['partPrefix']] || '*';
+                // then get a master # if available
+                var masterNumber = null; // id for grating master
+                var externalPartNumber = null; // external mfgr part number
+                var fixedGratingPartNumber = gratingPartNumber.replace('SR-','SR3-').replace('SR2-','SR1-');// prefix old-style
+                if ( (gratingPartNumber != '*') && gratingDetailsTable[fixedGratingPartNumber] ){
+                    var masterNumber = gratingDetailsTable[fixedGratingPartNumber]['Master'];
+                    var externalPartNumber = gratingDetailsTable[fixedGratingPartNumber]['External PN']
+                    if (debug){
+                        console.log('grating part number is ', gratingPartNumber)
+                        console.log('Master number is ', masterNumber)
+                    }
+                }
+                
 
                 var pixFactor = calcPixFactor(cameraDefs[cam]['xPixelSize']);
 
@@ -562,10 +575,12 @@ function createOrUpdateTable(){
 
                         headerDict[`&eta;@${l}nm`] = `eff@${l}`;
 
-                        if (ge[gratings[grat]['Part Number']]){
-                            newCombo[`eff@${l}`] = r(ge[gratings[grat]['Part Number']].getEff(l), 1);
+                        if (ge[masterNumber]){
+                            if(debug){console.log('found efficiency info for master ', masterNumber, ' ', externalPartNumber)};
+                            newCombo[`eff@${l}`] = r(ge[masterNumber].getEff(l), 1);
                         }
                         else {
+                            if(debug){console.log('did not find efficiency info for master ', masterNumber, ' ', externalPartNumber)}
                             newCombo[`eff@${l}`] = 0;
                         }
                     })

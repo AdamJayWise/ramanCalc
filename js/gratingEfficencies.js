@@ -56,11 +56,16 @@ var graphMargin = 50;
 var xScale = d3.scaleLinear().domain([200,2200]).range([0 + graphMargin, graphWidth - graphMargin/2]);
 var yScale = d3.scaleLinear().domain([0,100]).range([graphHeight - graphMargin, 0 + graphMargin/2]);
 
+// here I loop through var grating keys (which are rule/blaze text tag) and it maps p/n : key
+// the purpose is to map p/n to key for graphing purposes i guess 
+
 var lookupTable = {};
-Object.keys(gratings).forEach( function(grkey){
-    lookupTable[gratings[grkey]['Part Number']] = grkey;
+Object.keys(gratingDetailsTable).forEach( function(grkey){
+    lookupTable[String(gratingDetailsTable[grkey]['Master'])] = grkey;
 })
 
+
+// then look through var gratingEfficencies and create a grating object mapped to part number...
 var ge = {};
 
 gratingEfficiencies.forEach( function(entry){
@@ -69,15 +74,12 @@ gratingEfficiencies.forEach( function(entry){
     entry.data.forEach(function(d){
         points[String(d.x)] = d.y;
     })
-    ge[entry['partNumber']] = new grating({'Eff' : points})
+    ge[entry['master']] = new grating({'Eff' : points})
 });
 
 function rando(){
     return Math.random()*255
 }
-
-
-
 
 function createGraph(ruleRange, targetSelector){
     var graphDiv = d3.select(targetSelector).append('div').classed('graphDiv', true)
@@ -106,10 +108,11 @@ function createGraph(ruleRange, targetSelector){
     gratingEfficiencies.forEach(function(g){
 
         // if this grating is outside of the selected rule range, do nothing
-        if(!gratings[lookupTable[g['partNumber']]]){
-            console.log()
+        if(!gratingDetailsTable[lookupTable[g['master']]]){
+            if(1){console.log(g['master'])}
+            return 0 
         }
-        var thisRule = gratings[lookupTable[g['partNumber']]]['rule'];
+        var thisRule = gratingDetailsTable[lookupTable[g['master']]]['Rule'];
         if( (thisRule<ruleRange[0]) | (thisRule>ruleRange[1]) ){
             return 0
         }
@@ -141,7 +144,7 @@ function createGraph(ruleRange, targetSelector){
             newPath.on('mouseover', function(){
                     d3.select(this).style('stroke-width', '6px')
                     var nearestTooltip = d3.select(this.parentNode).select('.traceIdentifier');
-                    var newText = lookupTable[g['partNumber']];
+                    var newText = lookupTable[g['master']].replace(/SR[0-9]*/,'SR*').replace('SIL','');
                     nearestTooltip.html(newText);
             })
 
