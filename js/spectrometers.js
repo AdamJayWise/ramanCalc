@@ -25,6 +25,28 @@ var spectrometers = {
 
                   },
 
+  'Shamrock 303i (Legacy)' : {//'psf' : 60, // original psf from Tristan's script, in um
+                  'psf' : 40 * 0.98, // point spread function after removal of 10um slit 
+                   'dev' : -11.8, // deviation in degrees
+                  'fpt' : 4, // focal plane tilt, in degrees
+                  'fl' : 297, // focal length, in mm
+                  'gratingSizeX' : '80',
+                  'gratingSizeY' : '90',
+                  'f#' : 4,
+                  'displayName' : 'Kymera 193i', // what to call it in the GUI
+                  'partPrefix' : 'SR',
+
+                  },
+
+  /*
+  			spectrog=303
+				focal=297
+				halfangle=-11.8
+				tilt=-4
+				decided=1
+				resonsensor=40
+  */
+
   'Kymera 328i' : { //'psf' : 40,
                   'psf' : 38.73 * 1.126,
                   'dev' : -10.875,
