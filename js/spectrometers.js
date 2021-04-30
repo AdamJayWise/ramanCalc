@@ -66,7 +66,7 @@ var spectrometers = {
                 'gratingSizeX' : '80',
                 'gratingSizeY' : '90',
                 'f#' : 4,
-                'displayName' : 'Kymera 303i', // what to call it in the GUI
+                'displayName' : 'Shamrock 303i', // what to call it in the GUI
                 'partPrefix' : 'SR',
 
                 },

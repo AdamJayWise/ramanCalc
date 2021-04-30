@@ -18,6 +18,14 @@ var cameraDefs = {
             yPixelSize : 6.5,
             displayName: 'Neo 5.5'},
 
+            'Custom IR Camera' : {
+                shortName : 'custCam',
+                xPixels : 640,
+                yPixels : 100,
+                xPixelSize : 25,
+                yPixelSize : 25,
+                displayName: 'Customer IR Cam'},
+
         'iVac 324 FI' : {
             shortName : 'ivac324fi',
             xPixels : 1650,

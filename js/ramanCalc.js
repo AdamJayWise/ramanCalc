@@ -529,7 +529,7 @@ function createOrUpdateTable(){
                     'rule' : gratings[grat]['Rule'],
                     'blaze' : gratings[grat]['Blaze'],
                     'gratingPartNumber' : gratingPartNumber,
-                    'gratingTilt' : gratTilt,
+                    'gratingTilt' : Math.abs(gratTilt),
                     'dispersion' : r(wlObj['linearDispersion'], 2) || '-',
                     'Start Wavelength' : r(wlObj['startWavelength'], 2) || '-',
                     //'Center Wavelength' : app['centerWavelength'],
@@ -650,8 +650,22 @@ function createOrUpdateTable(){
             }
 
             if ( (Math.abs(Number(combo['gratingTilt'])) >= 32) | (typeof(combo['gratingTilt']) == typeof('yes'))){
-                newTd.classed('warning', true);
+                if ( (Math.abs(Number(combo['gratingTilt'])) < 40)){
+                    newTd.classed('warning', true);
+                    if(key == 'gratingTilt'){
+                        newTd.html(newTd.html()+'*');
+                    }
+                }
+
+                if ( (Math.abs(Number(combo['gratingTilt'])) >= 40)){
+                    newTd.classed('gratingError', true);
+                    if(key == 'gratingTilt'){
+                        newTd.html(newTd.html()+'**');
+                    }
+                }
+
             }
+
         })
     });
 
